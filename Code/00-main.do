@@ -20,7 +20,7 @@ if "`c(username)'" == "wb636611" {
 }
 if "`c(username)'" == "gabri" {
     global onedrive "C:\Users\gabri\OneDrive\Gabriel\Jobs\DIME\Devolve-G2PX"
-	global github 	"C:\Users\gabri\Documents\Github\World Bank\Devolve-G2PX"
+	global github 	"C:\Users\gabri\Documents\Github\World Bank\Devolve"
 }
 
 * Set globals for sub-folders 

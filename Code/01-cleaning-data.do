@@ -24,8 +24,17 @@ destring, replace
 duplicates report id_entrevista
 isid id_entrevista
 
-* Creating labels
-iecodebook 
+* Recoding dummy variables
+foreach dum_var of varlist gravacao idade1 INU01  {
+	replace `dum_var' = 0  if `dum_var' == 2
+	replace `dum_var' = .d if `dum_var' == 666
+	replace `dum_var' = .r if `dum_var' == 999
+	replace `dum_var' = .i if `dum_var' == 777
+}
+
+* Creating labels and changing types
+//iecodebook template using "${github}\documentation\variables_codebook.xlsx" // creates template to changes format and labels
+iecodebook apply using "${github}\documentation\variables_codebook.xlsx"
 
 * Save cleaned .dta file
 save "${onedrive}\data\intermediary\devolve_survey_clean.dta", replace
