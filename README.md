@@ -1,15 +1,37 @@
 # Devolve
 
-- Firm Survey data: (Base Final BM Programa Devolve ICMS RS Coleta.xlsx) Data sent by the Survey Firm without any data management by DIME.
-- Raw data: (devolve_survey_raw.dta) The same as the Firms Survey data file, but in .dta format.
-- Clean data – (devolve_survey_clean.dta) The same as Raw data, but with the following alterations
-    - Duplicates removed (if any)
-    - Recoded missing values (ex. .d instead of 666)
-    - Recoded dummies (0,1 instead of 1,2)
-    - Variables with english labels
-    - Variable values with english labels (ex. “Yes/No” instead of 1/0)
-- Constructed data: (devolve_survey_constructed.dta) The same as Clean data, but with the following alterations
-    - Variables renamed with comprehensible names (ex. flood_impact instead of INU01)
-    - New variables created to be used in the analysis
-    - Variables not useful for the analysis dropped 
+## Files Description
 
+### 📄 Firm Survey Data
+**Filename:** `Base Final BM Programa Devolve ICMS RS Coleta.xlsx`  
+Raw data file provided directly by the survey firm, with no processing or cleaning by DIME.
+
+---
+
+### 📄 Raw Data
+**Filename:** `devolve_survey_raw.dta`  
+Identical to the Firm Survey Data, but converted to `.dta` (Stata) format.
+
+---
+
+### 📄 Clean Data
+**Filename:** `devolve_survey_clean.dta`  
+Based on the Raw Data, with the following modifications:
+
+- Anonymization of personally identifiable information (if applicable)
+- Removal of duplicate entries (if any)
+- Standardization of missing values (e.g., `.d` instead of `666`)
+- Recoding of binary variables (e.g., `0/1` instead of `1/2`)
+- Variables labeled in English
+- Value labels translated to English (e.g., `"Yes/No"` instead of `1/0`)
+
+---
+
+### 📄 Constructed Data
+**Filename:** `devolve_survey_constructed.dta`  
+Based on the Clean Data, with further processing for analysis:
+
+- Variables renamed using descriptive names (e.g., `flood_impact` instead of `INU01`)
+- Original variable names included in the labels of renamed variables
+- New variables created for analysis
+- Irrelevant variables removed
