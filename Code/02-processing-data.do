@@ -1,14 +1,18 @@
 * Description: This script processes the Devolve-ICMS survey data and labeling variables for analysis. 
 
-
-*-------------------------------------------------------------------------------	
 * Loading dataset
-*------------------------------------------------------------------------------- 		
 use "${onedrive}\data\intermediary\devolve_survey_clean.dta", replace // 1,039 obs and 236 variables 
 
-*-------------------------------------------------------------------------------	
-*Renaming variables survey (inverted order, one per line for readability)
-*-------------------------------------------------------------------------------
+* Adding name of the variable at the begining of the label inside ()
+foreach var of varlist _all {
+	local label : variable label `var'
+	if "`label'" != "" {
+		local new_label = "(`var') `label'"
+		label variable `var' "`new_label'"
+	}
+}
+
+* Renaming variables for clarity
 rename tipotelefone                 phone_type
 rename idade1                       age_over18
 rename telefone                     hh
