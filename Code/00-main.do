@@ -41,8 +41,8 @@ foreach command of local user_commands {
 
 * Run do files 
 * Switch to 0/1 to not-run/run do-files
-if (1) do "${code}\01-cleaning-data.do"
-if (1) do "${code}\02-processing-data.do"
+if (0) do "${code}\01-cleaning-data.do"
+if (0) do "${code}\02-processing-data.do"
 if (0) do "${code}\03-analyzing-data.do"
 	
 
