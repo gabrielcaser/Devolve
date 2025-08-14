@@ -1,7 +1,7 @@
 * Description: This script processes the Devolve-ICMS survey data and labeling variables for analysis. 
 
 * Loading dataset
-use "${onedrive}\data\intermediary\devolve_survey_clean.dta", replace // 1,039 obs and 236 variables 
+use "${dropbox}\data\intermediary\devolve_survey_clean.dta", replace // 1,039 obs and 236 variables 
 
 * Adding name of the variable at the begining of the label inside ()
 foreach var of varlist _all {
@@ -206,7 +206,7 @@ label var icms_rate2_div "ICMS Rate Category"
 *-------------------------------------------------------------------------------	
 
 preserve   
-	import excel using "${onedrive}\data\raw\muncipalities_brazil.xlsx", firstrow clear
+	import excel using "${dropbox}\data\raw\muncipalities_brazil.xlsx", firstrow clear
 	rename Municipality municipality 
 	tempfile urbclass
 	save `urbclass', replace
@@ -349,7 +349,7 @@ keep ///
 * Save data set
 *-------------------------------------------------------------------------------	
    
-save "${onedrive}\data\final\devolve_survey_constructed.dta", replace // 1039 observations and 117 variables
+save "${dropbox}\data\final\devolve_survey_constructed.dta", replace // 1039 observations and 117 variables
    
    
    

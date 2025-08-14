@@ -10,11 +10,11 @@
 *-------------------------------------------------------------------------------
 
 * Import Excel file
-import excel "${onedrive}\data\raw\Base Final BM Programa Devolve ICMS RS Coleta.xlsx", ///
+import excel "${dropbox}\data\raw\Base Final BM Programa Devolve ICMS RS Coleta.xlsx", ///
 	sheet("Consulta1") firstrow clear
 
 * Save raw .dta file
-save "${onedrive}\data\raw\devolve_survey_raw.dta", replace
+save "${dropbox}\data\raw\devolve_survey_raw.dta", replace // 1039 obs and 236 vars
 
 * Change variable types
 destring, replace
@@ -638,8 +638,30 @@ label var INU04a_666 "Received assistance to recover from this year's floods-don
 label define lblaid_dk 1 "Yes" 0 "No" .d "Don't know"
 label values INU04a_666 lblaid_dk
 
+* Dropping variables with only missing values
+ds, has(type numeric)
+foreach var of varlist `r(varlist)' {
+	quietly count if `var' != .
+	if r(N) == 0 {
+		di as txt "Dropped numeric variable: `var'"
+		drop `var'
+	}
+}
+
+ds, has(type string)
+foreach var of varlist `r(varlist)' {
+	quietly count if !missing(`var')
+	if r(N) == 0 {
+		di as txt "Dropped string variable: `var'"
+		drop `var'
+	}
+}
+
+* Dropping internal vars
+drop starttime endtime
+
 * Save cleaned .dta file
-save "${onedrive}\data\intermediary\devolve_survey_clean.dta", replace
+save "${dropbox}\data\intermediary\devolve_survey_clean.dta", replace // 1039 obs and 232 vars
 
 
 * End of the script

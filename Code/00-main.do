@@ -15,11 +15,11 @@ display "`c(username)'"
 
 * Add file paths
 if "`c(username)'" == "wb636611" {
-    global onedrive "C:\Users\wb631166\OneDrive - WBG\Desktop\Taxes\G2Px"
+    global dropbox "C:\Users\wb631166\OneDrive - WBG\Desktop\Taxes\G2Px"
 	global github 	"C:\WBG\GitHub\Devolve-G2PX"
 }
 if "`c(username)'" == "gabri" {
-    global onedrive "C:\Users\gabri\OneDrive\Gabriel\Jobs\DIME\Devolve-G2PX"
+    global dropbox "C:\Users\gabri\OneDrive\Gabriel\Jobs\DIME\Devolve-G2PX"
 	global github 	"C:\Users\gabri\Documents\Github\World Bank\Devolve"
 }
 
