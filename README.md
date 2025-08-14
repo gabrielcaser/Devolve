@@ -1,16 +1,12 @@
 # Devolve
 
-## Files Description
-
-### 📄 Firm Survey Data
-**Filename:** `Base Final BM Programa Devolve ICMS RS Coleta.xlsx`  
-Raw data file provided directly by the survey firm, with no processing or cleaning by DIME.
+## Files Produced Description
 
 ---
 
 ### 📄 Raw Data
 **Filename:** `devolve_survey_raw.dta`  
-Identical to the Firm Survey Data, but converted to `.dta` (Stata) format.
+Identical to the Firm Survey Data `.xlsx` (Excel), but converted to `.dta` (Stata) format.
 
 ---
 
