@@ -4,158 +4,50 @@
 use "${dropbox}\data\final\devolve_survey_constructed.dta", clear 
 
 * Figures
-	
-*Familiarity with Devolve-ICMS program 
-	
-preserve
-	*Collapse 
-	gen total = 1
-    collapse (count) total, by(know_devolve)  
+    * Loop over selected variables for barplots with label as title and export graph as JPG
+    local vars know_devolve participates_devolve reason_money_accounts program_discovery
 
-    egen total_sum = total(total) if !missing(know_devolve)   
-    gen percent = (total / total_sum) * 100  
-	gen percent_round = round(percent)
-	
-	* Store total N in a local macro
-	sum total if !missing(know_devolve), meanonly
-    local N : display %15.0fc r(sum)
-	drop if percent_round<1
+    foreach var of local vars {
+        preserve
+            gen total = 1
+            collapse (count) total, by(`var')
+            egen total_sum = total(total) if !missing(`var')
+            gen percent = (total / total_sum) * 100
+            gen percent_round = round(percent)
+            sum total if !missing(`var'), meanonly
+            local N : display %15.0fc r(sum)
 
-	* Generate a horizontal barplot with labels   
-    graph hbar (mean) percent_round, over(know_devolve, sort(percent_round) descending) ///
-    bar(1, color(navy)) ///
-    blabel(bar, format(%10.0gc) position(outside)) ///
-    ytitle("Percentage") ///
-    title("Knowledge of Devolve Program") ///
-    note("N =`N'")  //
-restore
-	
-	
-	
-	*Today, do you and your family who lives in the same household as you participate in the Devolve-ICMS program? 
-	
-	preserve
-	
-	*Collapse 
-	
-	gen total = 1
-	
-	drop if participates_devolve==3
-	
-    collapse (count) total, by(participates_devolve)  
-	
-    egen total_sum = total(total) if !missing(participates_devolve)
-   
-    gen percent = (total / total_sum) * 100  
-	
-	gen percent_round = round(percent)
-	
-	* Store total N in a local macro
-	  
-	 sum total if !missing(participates_devolve), meanonly
-     local N : display %15.0fc r(sum)
-	
-	drop if percent_round<1
+            * Get label for title
+            local title : variable label `var'
 
-	
-	* Generate a horizontal barplot with labels
-   
-  graph hbar (mean) percent_round, over(participates_devolve, sort(percent_round) descending) ///
-bar(1, color(navy)) ///
-blabel(bar, format(%10.0gc) position(outside)) ///
-ytitle("Percentage") ///
-title("Participation Devolve Program") ///
-note("N=`N'")
-	
-	restore
-	
-*Why does this money go into the participants' accounts?
-	
-	preserve
-	
-    gen total = 1
-    collapse (sum) total, by(reason_money_accounts)
-    
-    sort total
-	
-    * Compute total responses
-    egen total_sum = total(total) if !missing(reason_money_accounts)
+            * For program_discovery, drop small percentages and sort by percent
+            if "`var'" == "program_discovery" {
+                gen rank = -percent
+                gsort rank
+                drop if percent_round < 10
+            }
 
-    * Compute percentage
-    gen percent = (total / total_sum) * 100  
-    gen percent_round = round(percent)
+            * Extract file name from label (text between parentheses)
+            local fname = ""
+            if strpos("`title'", "(") & strpos("`title'", ")") {
+                local fname = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
+            }
+            else {
+                local fname = "`var'"
+            }
 
-    * Adjust rounding errors to ensure sum = 100%
-    egen sum_round = total(percent_round)
-    
-    * Find the category with the largest percentage
-    egen max_percent = max(percent_round)
-    
-    * Adjust only the largest category to make total = 100%
-    replace percent_round = percent_round + (100 - sum_round) if percent_round == max_percent & sum_round != 100
+            graph hbar percent_round, over(`var', sort(percent_round) descending) ///
+                bar(1, color(navy)) ///
+                bar(2, color(blue)) ///
+                blabel(bar, format(%10.0gc) position(outside)) ///
+                ytitle("Percentage") ///
+                title("`title'") ///
+                note("N=`N'") ///
+                ysize(6) xsize(10)
 
-    * Store total N in a local macro
-    sum total if !missing(reason_money_accounts), meanonly
-    local N : display %15.0fc r(sum)
-
-    tab percent_round
-
-    drop if percent_round < 1
-
-    * Graph 
-    graph hbar (mean) percent_round, over(reason_money_accounts, sort(percent_round) descending) ///
-        bar(1, color(navy)) ///
-        blabel(bar, format(%10.0gc) position(outside)) ///
-        ytitle("Percentage") ///
-        title("Reasons for Deposits into Participants' Accounts") ///
-        note("N=`N'")
-
-restore
-
-	
-	
-	
-	*How did you find out you were part of the program?
-	
-	 preserve
-   
-     gen total = 1
-	 
-     collapse (sum) total, by(program_discovery)
-
-     egen total_sum = total(total) if !missing(program_discovery)
-   
-     gen percent = (total / total_sum) * 100  
-	
-	 gen percent_round = round(percent)
-	 
-	  * Store total N in a local macro
-	  
-	 sum total if !missing(program_discovery), meanonly
-     local N : display %15.0fc r(sum)
-	 
-
-    gen rank = -percent  // Create a ranking variable (negative to sort descending)
-	
-    gsort rank  // Sort by rank (descending order of percentage)
-	
-    
-	 drop if percent_round<10
-
-	
-   * Graph
-
-    graph hbar percent_round, over(program_discovery, sort(percent_round) descending) ///
-    bar(1, color(navy)) ///
-    bar(2, color(blue)) ///
-    blabel(bar, format(%10.0gc) position(outside)) ///
-    ytitle("Percentage") ///
-    title("Ways Participants Learned About Their Program Inclusion") ///
-    note("N=`N'") ///
-    ysize(6) xsize(10)
-
-	
-	restore
+            graph export "${github}/Outputs/Figures/F_`fname'.png", replace
+        restore
+    }
 	
 
 *-------------------------------------------------------------------------------	
