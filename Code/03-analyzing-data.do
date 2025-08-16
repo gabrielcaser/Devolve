@@ -9,28 +9,42 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear
 
     foreach var of local vars {
         preserve
-            gen total = 1
+            * Exceptions by variable
+            if "`var'" == "participates_devolve" {
+                drop if participates_devolve == 3
+            }
+
+            * Collapsing
+            gen total = 1 if !missing(`var')
             collapse (count) total, by(`var')
             egen total_sum = total(total) if !missing(`var')
             gen percent = (total / total_sum) * 100
             gen percent_round = round(percent)
             sum total if !missing(`var'), meanonly
-            local N : display %15.0fc r(sum)
+            local N : display r(sum)
+            
+            * Droping low values
+            if "`var'" == "reason_money_accounts" {
+                drop if percent_round < 1
+            }
 
-            * Get label for title
-            local title : variable label `var'
-
-            * For program_discovery, drop small percentages and sort by percent
             if "`var'" == "program_discovery" {
                 gen rank = -percent
                 gsort rank
                 drop if percent_round < 10
             }
+            
+            * Get label for title
+            local title : variable label `var'
 
             * Extract file name from label (text between parentheses)
             local fname = ""
             if strpos("`title'", "(") & strpos("`title'", ")") {
                 local fname = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
+                * Remove the parentheses and content from the title for display
+                local title = subinstr("`title'", "(" + "`fname'" + ")", "", .)
+                * Remove any trailing/leading spaces
+                local title = strtrim("`title'")
             }
             else {
                 local fname = "`var'"
@@ -39,16 +53,17 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear
             graph hbar percent_round, over(`var', sort(percent_round) descending) ///
                 bar(1, color(navy)) ///
                 bar(2, color(blue)) ///
+                bar(3, color(gs14)) /// // gray for missing
                 blabel(bar, format(%10.0gc) position(outside)) ///
                 ytitle("Percentage") ///
-                title("`title'") ///
-                note("N=`N'") ///
-                ysize(6) xsize(10)
+                title("`title'", size(medium)) ///
+                note("Number of valid observations = `N'") ///
+                ysize(6) xsize(10) ///
+                ylabel(, noticks nogrid nolabels)
 
-            graph export "${github}/Outputs/Figures/F_`fname'.png", replace
+            graph export "${github}/Outputs/Figures/F_`fname'.png", replace width(2200)
         restore
     }
-	
 
 *-------------------------------------------------------------------------------	
 * Summary Stats Table 
