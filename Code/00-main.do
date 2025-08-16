@@ -8,7 +8,7 @@ set mem 800m
 
 * Set reproducibility options
 set seed 1234
-version 18
+version 15
 
 * Set project global(s)	
 display "`c(username)'"

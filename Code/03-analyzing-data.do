@@ -1,7 +1,7 @@
 * Analyzing Data
 
 * Loads Dataset
-use "${dropbox}\data\final\devolve_survey_constructed.dta", clear 
+use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 
 * Figures
     * Loop over selected variables for barplots with label as title and export graph as JPG
@@ -12,26 +12,6 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear
             * Exceptions by variable
             if "`var'" == "participates_devolve" {
                 drop if participates_devolve == 3
-            }
-
-            * Collapsing
-            gen total = 1 if !missing(`var')
-            collapse (count) total, by(`var')
-            egen total_sum = total(total) if !missing(`var')
-            gen percent = (total / total_sum) * 100
-            gen percent_round = round(percent)
-            sum total if !missing(`var'), meanonly
-            local N : display r(sum)
-            
-            * Droping low values
-            if "`var'" == "reason_money_accounts" {
-                drop if percent_round < 1
-            }
-
-            if "`var'" == "program_discovery" {
-                gen rank = -percent
-                gsort rank
-                drop if percent_round < 10
             }
             
             * Get label for title
@@ -49,18 +29,21 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear
             else {
                 local fname = "`var'"
             }
-
-            graph hbar percent_round, over(`var', sort(percent_round) descending) ///
-                bar(1, color(navy)) ///
-                bar(2, color(blue)) ///
-                bar(3, color(gs14)) /// // gray for missing
-                blabel(bar, format(%10.0gc) position(outside)) ///
-                ytitle("Percentage") ///
-                title("`title'", size(medium)) ///
-                note("Number of valid observations = `N'") ///
-                ysize(6) xsize(10) ///
-                ylabel(, noticks nogrid nolabels)
-
+			
+			* Getting number of observations
+			drop if `var' == . 
+            count if !missing(`var') | `var' == .d
+            local N : display r(N)
+			
+			* Ploting
+			graph bar (percent), over(`var', sort(1) descending) horizontal missing nofill ///
+			bar(1, color(navy)) ///
+			ytitle("Percent") ///
+			title("`title'", size(medium)) ///
+			blabel(bar, format(%9.0f) position(outside)) ///
+			note("Note: Number of valid observations = `N'.") ///
+			ylabel(, noticks nogrid nolabels)
+			
             graph export "${github}/Outputs/Figures/F_`fname'.png", replace width(2200)
         restore
     }
