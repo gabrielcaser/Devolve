@@ -1,11 +1,17 @@
 * Analyzing Data
 
+*********************** MORE COMPLEX FIGURES THAT I HAVE NOT REPLICATED YET **************
+* "Percent of Yes Responses by Variable"
+* "Other participants in the program that you know?-Other"
+* "Requirements Devolve program"
+
+
 * Loads Dataset
 use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 
 * Figures
     * Loop over selected variables for barplots with label as title and export graph as JPG
-    local vars know_devolve participates_devolve reason_money_accounts program_discovery
+    local vars know_devolve participates_devolve program_discovery reason_money_accounts deposit_frequency
 
     foreach var of local vars {
         preserve
@@ -35,16 +41,22 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
             count if !missing(`var') | `var' == .d
             local N : display r(N)
 			
-			* Ploting
-			graph bar (percent), over(`var', sort(1) descending) horizontal missing nofill ///
-			bar(1, color(navy)) ///
-			ytitle("Percent") ///
-			title("`title'", size(medium)) ///
-			blabel(bar, format(%9.0f) position(outside)) ///
-			note("Note: Number of valid observations = `N'.") ///
-			ylabel(, noticks nogrid nolabels)
+			* Collapse to frequencies in order to drop categories below 1%
+			contract `var'
+			egen total_sum = total(_freq) if `var' != .
+            gen percent = (_freq / total_sum) * 100
+			drop if percent < 1
+
+			* Plotting
+            graph bar percent, over(`var', sort(1) descending) horizontal nofill missing ///
+                bar(1, color(navy)) ///
+                ytitle("Percentage") ///
+                title("`title'", size(medium)) ///
+                blabel(bar, format(%9.0f) position(outside)) ///
+                note("Note: Number of valid observations = `N'. Categories <1% omitted. ") ///
+                ylabel(, noticks nogrid nolabels)
 			
-            graph export "${github}/Outputs/Figures/F_`fname'.png", replace width(2200)
+			graph export "${github}/Outputs/Figures/F_`fname'.png", replace width(2200)					
         restore
     }
 

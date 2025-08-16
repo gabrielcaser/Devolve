@@ -14,12 +14,9 @@ version 15
 display "`c(username)'"
 
 * Add file paths
-if "`c(username)'" == "wb636611" {
-    global dropbox "C:\Users\wb631166\OneDrive - WBG\Desktop\Taxes\G2Px"
-	global github 	"C:\WBG\GitHub\Devolve-G2PX"
-}
+
 if "`c(username)'" == "gabri" {
-    global dropbox "C:\Users\gabri\OneDrive\Gabriel\Jobs\DIME\Devolve-G2PX"
+    global dropbox "C:\Users\gabri\Dropbox\Survey_DevolveICMS"
 	global github 	"C:\Users\gabri\Documents\Github\World Bank\Devolve"
 }
 
@@ -41,8 +38,8 @@ foreach command of local user_commands {
 
 * Run do files 
 * Switch to 0/1 to not-run/run do-files
-if (0) do "${code}\01-cleaning-data.do"
-if (0) do "${code}\02-processing-data.do"
+if (1) do "${code}\01-cleaning-data.do"
+if (1) do "${code}\02-processing-data.do"
 if (0) do "${code}\03-analyzing-data.do"
 	
 
