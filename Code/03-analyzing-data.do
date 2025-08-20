@@ -33,12 +33,12 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 			   hh_bank_account 
 			   store_receipt 
 			   reason_no_receipt 
-			   consumption_receipt // order
+			   consumption_receipt 
 			   type_cpf
-			   freq_cpf // order
+			   freq_cpf 
 			   cpf_invoice_freq
-			   freq_cpf_na // order
-			    // order
+			   freq_cpf_na 
+			    
 			   ;
 	#d cr 
 	
@@ -72,21 +72,24 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
             count if !missing(`var') | `var' == .d
             local N : display r(N)
 			
-			//* Collapse to frequencies in order to drop categories below 1%
-			//contract `var'
-			//egen total_sum = total(_freq) if `var' != .
-            //gen percent = (_freq / total_sum) * 100
-			//drop if percent < 1
+            * Define sort option based on variable
+            if inlist("`var'", "freq_cpf", "freq_cpf_na", "consumption_receipt", "deposit_frequency", "monthly_purchases_cat") {
+                local sortopt = ""
+            }
+			else {
+				local sortopt = "sort(1) descending"
+			}
 
-			* Plotting
-            graph bar (percent), over(`var', sort(1) descending) horizontal nofill missing /// // remove () in case of collapsing
+            * Plotting
+            graph bar (percent), over(`var', `sortopt') horizontal nofill missing ///
                 bar(1, color(navy)) ///
                 ytitle("Percentage") ///
                 title("`title'", size(medium)) ///
                 blabel(bar, format(%9.0f) position(outside)) ///
                 note("Note: Number of valid observations = `N'.") ///
-                ylabel(, noticks nogrid nolabels)
-			
-			graph export "${github}/Outputs/Figures/F_`fname'.png", replace width(2200)					
+                ylabel(, noticks nogrid nolabels) ///
+				ysize(6) xsize(10)
+
+            graph export "${github}/Outputs/Figures/F_`fname'.png", replace width(2000)					
         restore
     }
