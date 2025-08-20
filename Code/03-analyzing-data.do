@@ -1,10 +1,18 @@
-* Analyzing Data
+* Analyzing Data - This program produces the figures 
 
 *********************** MORE COMPLEX FIGURES THAT I HAVE NOT REPLICATED YET **************
 * "Percent of Yes Responses by Variable"
 * "Other participants in the program that you know?-Other"
 * "Requirements Devolve program"
 * "Daily Payment Methods Used for Purchases"
+* "Financial Institutions "
+* "Financial Institutions-Other"
+* "Reason(s) do you not include your CPF number" p. 37
+* "Reason(s) do you not include your CPF-Other"  p. 38 NFI04a1_Other
+* "Reason(s) do you not include your CPF-Other"  p. 40 NFI04b1_Other
+* "Reason(s) do you not include your CPF number" p. 41
+
+
 ******************************************************************************************
 
 * Loads Dataset
@@ -12,17 +20,29 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 
 * Figures
     * Loop over selected variables for barplots with label as title and export graph as JPG
-    local vars know_devolve ///
-               participates_devolve ///
-               program_discovery ///
-               reason_money_accounts ///
-               deposit_frequency ///
-               quarterly_deposit ///
-               usage_increases ///
-               unused_funds ///
-			   purchases_last_week
-			   
-	local vars hh_bank_account	   
+    #d ;
+	local vars know_devolve 
+               participates_devolve 
+               program_discovery 
+               reason_money_accounts 
+               deposit_frequency 
+               quarterly_deposit 
+               usage_increases 
+               unused_funds 
+			   purchases_last_week 
+			   hh_bank_account 
+			   store_receipt 
+			   reason_no_receipt 
+			   consumption_receipt // order
+			   type_cpf
+			   freq_cpf // order
+			   cpf_invoice_freq
+			   freq_cpf_na // order
+			    // order
+			   ;
+	#d cr 
+	
+	local vars monthly_purchases_cat //card_devolve
 
     foreach var of local vars {
         preserve
@@ -34,7 +54,7 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
             * Get label for title
             local title : variable label `var'
 
-            * Extract file name from label (text between parentheses)
+            * Extract file name from label (text between parentheses) to save files with the names used on onverleaf
             local fname = ""
             if strpos("`title'", "(") & strpos("`title'", ")") {
                 local fname = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
@@ -59,12 +79,12 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 			//drop if percent < 1
 
 			* Plotting
-            graph bar (percent), over(`var', sort(1) descending) horizontal nofill missing ///
+            graph bar (percent), over(`var', sort(1) descending) horizontal nofill missing /// // remove () in case of collapsing
                 bar(1, color(navy)) ///
                 ytitle("Percentage") ///
                 title("`title'", size(medium)) ///
                 blabel(bar, format(%9.0f) position(outside)) ///
-                note("Note: Number of valid observations = `N'. Categorie '.d' meaning is 'Don't know'. ") ///
+                note("Note: Number of valid observations = `N'.") ///
                 ylabel(, noticks nogrid nolabels)
 			
 			graph export "${github}/Outputs/Figures/F_`fname'.png", replace width(2200)					

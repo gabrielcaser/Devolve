@@ -150,7 +150,7 @@ replace monthly_purchases_cat = 4 if monthly_purchases > 1500 &  monthly_purchas
 replace monthly_purchases_cat = 5 if monthly_purchases > 2000
 replace monthly_purchases_cat = . if monthly_purchases < 0
 
-label var monthly_purchases_cat "Monthly Spend Category"
+label var monthly_purchases_cat "(NFI05) Monthly Spend Category"
 la de lblmonthly_purchases_cat 1 "Less than R$500.00" 2 "From R$500.00 to R$1,000.00" 3 "From R$1,000.00 to R$1,500.00" 4 "From R$1,500.00 to R$2,000.00" 5 "More than R$ 2,000.00" .d "Don't know"
 label values monthly_purchases_cat lblmonthly_purchases_cat
 
