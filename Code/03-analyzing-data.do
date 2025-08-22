@@ -20,9 +20,10 @@
 * "Type of Assistance Received for Flood Recovery" p. 80
 * "Kind of assistance after the floods-Other" p. 81
 
-
-
 ******************************************************************************************
+
+******************************* SOME FIGURES RECEIVED DIFFERENT FILE NAMES ***************
+* "Graph_Top_Municipalities_Respondents_live" = F_DEM01
 
 * Loads Dataset
 use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
@@ -72,10 +73,11 @@ local vars know_devolve
 		   flood_aid
 		   gender
 		   age_div
+		   municipality_top5
            ;
 #d cr 
 
-//local vars   
+local vars income_div
 
 foreach var of local vars {
     preserve
@@ -93,17 +95,29 @@ foreach var of local vars {
     if "`var'" == "gender" { // for some reason this figure has a different name from the pattern
         local fname = "Gender"
     }
+	if "`var'" == "municipality_top5" {
+		local fname = "Graph_Top_Municipalities_Respondents_live"
+	}
     else {
         local fname = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
         * Remove the parentheses and content from the title for display
         local title = subinstr("`title'", "(" + "`fname'" + ")", "", .)
         * Remove any trailing/leading spaces
         local title = strtrim("`title'")
+		local fname = "F_" + "`fname'"
     }
+	
     
     * Getting number of observations
-    drop if `var' == . 
-    count if !missing(`var') | `var' == .d
+	if inlist("`var'", "municipality_top5") { // string vars
+	 drop if `var' == "."
+	 count if !missing(`var') | `var' == ".d"
+	}
+	else {
+	 drop if `var' == . 
+	 count if !missing(`var') | `var' == .d
+	}
+
     local N : display r(N)
     
     * Define variables for which sort option is not needed
@@ -135,6 +149,6 @@ foreach var of local vars {
         ylabel(, noticks nogrid nolabels) ///
         ysize(6) xsize(10)
 
-    graph export "${github}/Outputs/Figures/F_`fname'.png", replace width(2000)					
+    graph export "${github}/Outputs/Figures/`fname'.png", replace width(2000)					
     restore
 }

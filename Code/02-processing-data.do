@@ -172,12 +172,13 @@ label var duration_ms "Duration of phone call (minutes)"
 
 * Variable income_div is correctly defined
 gen income_div = .
-replace income_div = 0 if income == 1 
-replace income_div = 1 if income >= 2 
+replace income_div = 0  if income == 1 
+replace income_div = 1  if income >= 2 
+replace income_div = .d if income == .d
 
-label define lblincome_div 0 "Less than 600" 1 "More than 600"
+label define lblincome_div 0 "Less than 600" 1 "More than 600" .d "Don't know"
 label values income_div lblincome_div
-label var income_div "Income Category"
+label var income_div "(DEM04) Income Category"
 
 * Variable age 
 gen age_div = .
@@ -201,6 +202,17 @@ label define lblicms_rate2_div 1 "Less than 7%" 2 "From 7% to 10%" 3 "From 10% t
 label values icms_rate2_div lblicms_rate2_div
 label var icms_rate2_div "ICMS Rate Category"
 
+* Variable Municipality (change all the values to "Other" beside the top 5 more frequent)
+* Find top 5 most frequent municipalities
+preserve
+	contract municipality
+	gsort -_freq
+	keep in 1/5
+	levelsof municipality, local(top5) sep(",")
+restore
+gen municipality_top5 = municipality
+replace municipality_top5 = "Other" if !inlist(municipality, `top5')
+label var municipality_top5 "Top 5 municipalities where respondents live"
 *-------------------------------------------------------------------------------	
 * Merge with urban/rural classification
 *-------------------------------------------------------------------------------	
@@ -349,7 +361,8 @@ keep ///
 	displaced_rains ///
 	displaced_rains_days ///
 	flood_aid ///
-	gender
+	gender ///
+	municipality_top5
 
 *-------------------------------------------------------------------------------	
 * Save data set
