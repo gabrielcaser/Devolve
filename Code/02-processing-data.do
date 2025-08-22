@@ -186,7 +186,7 @@ replace age_div = 1 if age >= 45
 
 label define lblage_div 0 "Less than 45 years" 1 "More than 45 years" 
 label values age_div lblage_div
-label var age_div "Age Category"
+label var age_div "(DEM02) Age Category"
 
 *ICMS rates
 gen icms_rate2_div=.
@@ -343,7 +343,13 @@ keep ///
 	income_div ///
 	age_div ///
 	icms_rate2_div ///
-	urban
+	urban ///
+	flood_impact ///
+	flood_impact2 ///
+	displaced_rains ///
+	displaced_rains_days ///
+	flood_aid ///
+	gender
 
 *-------------------------------------------------------------------------------	
 * Save data set

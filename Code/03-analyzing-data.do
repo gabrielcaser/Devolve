@@ -15,6 +15,12 @@
 * "Problems using Citizen Card-Other" p. 52
 * "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 59 icms_rate2
 * "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 60 icms_label_with_counts
+* "Reasons not participating Nota Fiscal Program-Other" p. 71 other_NFG02Aa
+* "Days Unable to Enter Home Due to Floods" p. 78
+* "Type of Assistance Received for Flood Recovery" p. 80
+* "Kind of assistance after the floods-Other" p. 81
+
+
 
 ******************************************************************************************
 
@@ -60,10 +66,16 @@ local vars know_devolve
 		   nota_fiscal_program
 		   participate_nfg
 		   reason_nfg
+		   flood_impact
+		   flood_impact2
+		   displaced_rains
+		   flood_aid
+		   gender
+		   age_div
            ;
 #d cr 
 
-local vars      
+//local vars   
 
 foreach var of local vars {
     preserve
@@ -77,15 +89,16 @@ foreach var of local vars {
 
     * Extract file name from label (text between parentheses) to save files with the names used on onverleaf
     local fname = ""
-    if strpos("`title'", "(") & strpos("`title'", ")") {
+
+    if "`var'" == "gender" { // for some reason this figure has a different name from the pattern
+        local fname = "Gender"
+    }
+    else {
         local fname = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
         * Remove the parentheses and content from the title for display
         local title = subinstr("`title'", "(" + "`fname'" + ")", "", .)
         * Remove any trailing/leading spaces
         local title = strtrim("`title'")
-    }
-    else {
-        local fname = "`var'"
     }
     
     * Getting number of observations
