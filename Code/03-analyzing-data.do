@@ -19,6 +19,9 @@
 * "Days Unable to Enter Home Due to Floods" p. 78
 * "Type of Assistance Received for Flood Recovery" p. 80
 * "Kind of assistance after the floods-Other" p. 81
+* "Reasons for not collecting the card because of..." p. 90
+* "Reasons not collecting the card-Other" p. 91
+
 
 ******************************************************************************************
 
@@ -74,10 +77,22 @@ local vars know_devolve
 		   gender
 		   age_div
 		   municipality_top5
+		   income_div
+		   household_size
+		   get_card
+		   stores_nearby
+		   card_use_worry
+		   worry_unauthorized_card
+		   send_information
+		   send_information_method
+		   usage_increases
+		   payment_method_cash
            ;
 #d cr 
 
-local vars income_div
+local vars  gender
+
+global grouped_vars usage_increases payment_method_cash
 
 foreach var of local vars {
     preserve
@@ -90,21 +105,22 @@ foreach var of local vars {
     local title : variable label `var'
 
     * Extract file name from label (text between parentheses) to save files with the names used on onverleaf
-    local fname = ""
+    local file_name = ""
 
-    if "`var'" == "gender" { // for some reason this figure has a different name from the pattern
-        local fname = "Gender"
-    }
+
 	if "`var'" == "municipality_top5" {
-		local fname = "Graph_Top_Municipalities_Respondents_live"
+		local file_name = "Graph_Top_Municipalities_Respondents_live"
 	}
     else {
-        local fname = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
+        local file_name = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
         * Remove the parentheses and content from the title for display
-        local title = subinstr("`title'", "(" + "`fname'" + ")", "", .)
+        local title = subinstr("`title'", "(" + "`file_name'" + ")", "", .)
         * Remove any trailing/leading spaces
         local title = strtrim("`title'")
-		local fname = "F_" + "`fname'"
+		local file_name = "F_" + "`file_name'"
+    }
+	if "`var'" == "gender" { // for some reason this figure has a different name from the pattern
+        local file_name = "F_Gender"
     }
 	
     
@@ -127,20 +143,41 @@ foreach var of local vars {
 					   inequality_brazil tax_collection tax_revenue_preference
 					   tax_essential_goods cpf_on_invoice_rule increase_tax_on_food
 					   tax_on_foodreturned tax_food_all tax_perfumes_makeup
+					   household_size stores_nearby card_use_worry
+					   worry_unauthorized_card
 					   
 					   ;
 	#d cr
 	
     * Define sort option based on variable
-    if strpos(" $nosort_vars ", " `var' ") {
+    if strpos("${nosort_vars}", "`var'") {
         local sortopt = ""
     }
     else {
         local sortopt = "sort(1) descending"
     }
 
-    * Plotting
-    graph bar (percent), over(`var', `sortopt') horizontal nofill missing ///
+    * Plotting	
+    if strpos("${grouped_vars}", "`var'") {
+		
+		local file_name = "`file_name'" + "_grouped"
+		local title = "`title'" + " (by group)"
+		
+        graph bar (percent), over(income_div, `sortopt')  over(`var')  nofill missing ///
+        asyvars ///
+        bar(2, color(navy)) ///
+        bar(1, color(midblue))  /// 
+        bar(3, color(ltblue))  /// 
+        ytitle("Percentage") ///
+        title("`title'", size(medium)) ///
+        blabel(bar, format(%9.1f) position(outside)) ///
+        note("Note: Number of valid observations = `N'.") ///
+        ylabel(, noticks nogrid nolabels) ///
+        ysize(6) xsize(10) ///
+		legend(position(6))
+    }
+    else {
+        graph bar (percent), over(`var', `sortopt') horizontal nofill missing ///
         bar(1, color(navy)) ///
         ytitle("Percentage") ///
         title("`title'", size(medium)) ///
@@ -148,7 +185,10 @@ foreach var of local vars {
         note("Note: Number of valid observations = `N'.") ///
         ylabel(, noticks nogrid nolabels) ///
         ysize(6) xsize(10)
+    }
 
-    graph export "${github}/Outputs/Figures/`fname'.png", replace width(2000)					
+    * Saving
+    graph export "${github}/Outputs/Figures/`file_name'.png", replace width(2150)
+
     restore
 }

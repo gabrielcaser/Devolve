@@ -127,7 +127,7 @@ label define lblquarterly_deposit 1 "True" 0 "False" .d "Don't know"
 label values DEV06 lblquarterly_deposit
 
 * CPF use increases benefit
-label var DEV07 "CPF usage on invoices increases benefits in the Devolve ICMS Program."
+label var DEV07 "Increased Earnings from the Program with CPF-RI"
 label define lblusage_increases 1 "True" 0 "False" .d "Don't know"
 label values DEV07 lblusage_increases
 

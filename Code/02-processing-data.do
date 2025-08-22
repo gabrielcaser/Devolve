@@ -176,7 +176,7 @@ replace income_div = 0  if income == 1
 replace income_div = 1  if income >= 2 
 replace income_div = .d if income == .d
 
-label define lblincome_div 0 "Less than 600" 1 "More than 600" .d "Don't know"
+label define lblincome_div 0 "M. income < R$600" 1 "M. income > R$600" .d "Don't know"
 label values income_div lblincome_div
 label var income_div "(DEM04) Income Category"
 
@@ -362,7 +362,8 @@ keep ///
 	displaced_rains_days ///
 	flood_aid ///
 	gender ///
-	municipality_top5
+	municipality_top5 ///
+	household_size
 
 *-------------------------------------------------------------------------------	
 * Save data set
