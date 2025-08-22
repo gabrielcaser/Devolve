@@ -90,9 +90,9 @@ local vars know_devolve
            ;
 #d cr 
 
-local vars  gender
+local vars hh_bank_account
 
-global grouped_vars usage_increases payment_method_cash
+global grouped_vars usage_increases payment_method_cash hh_bank_account
 
 foreach var of local vars {
     preserve
@@ -145,7 +145,6 @@ foreach var of local vars {
 					   tax_on_foodreturned tax_food_all tax_perfumes_makeup
 					   household_size stores_nearby card_use_worry
 					   worry_unauthorized_card
-					   
 					   ;
 	#d cr
 	
@@ -160,21 +159,23 @@ foreach var of local vars {
     * Plotting	
     if strpos("${grouped_vars}", "`var'") {
 		
-		local file_name = "`file_name'" + "_grouped"
+		local file_name = "`file_name'" + "_income"
 		local title = "`title'" + " (by group)"
 		
-        graph bar (percent), over(income_div, `sortopt')  over(`var')  nofill missing ///
+        graph bar (percent),  over(`var') over(income_div, `sortopt') horizontal   nofill missing ///
         asyvars ///
         bar(2, color(navy)) ///
         bar(1, color(midblue))  /// 
-        bar(3, color(ltblue))  /// 
+        bar(3, color(ltblue))  ///
+		bar(4, color(gs12))       /// 
+		bar(5, color(gs14))       /// 
         ytitle("Percentage") ///
         title("`title'", size(medium)) ///
         blabel(bar, format(%9.1f) position(outside)) ///
         note("Note: Number of valid observations = `N'.") ///
         ylabel(, noticks nogrid nolabels) ///
-        ysize(6) xsize(10) ///
-		legend(position(6))
+        ysize(6) xsize(10) 
+		
     }
     else {
         graph bar (percent), over(`var', `sortopt') horizontal nofill missing ///

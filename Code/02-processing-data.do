@@ -176,7 +176,7 @@ replace income_div = 0  if income == 1
 replace income_div = 1  if income >= 2 
 replace income_div = .d if income == .d
 
-label define lblincome_div 0 "M. income < R$600" 1 "M. income > R$600" .d "Don't know"
+label define lblincome_div 0 "Income < R$600" 1 "Income > R$600" .d "Don't know"
 label values income_div lblincome_div
 label var income_div "(DEM04) Income Category"
 
