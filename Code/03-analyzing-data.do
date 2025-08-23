@@ -1,12 +1,12 @@
 * Analyzing Data - This program produces the figures 
 
 *********************** MORE COMPLEX FIGURES THAT I HAVE NOT REPLICATED YET **************
-* "Percent of Yes Responses by Variable"
-* "Other participants in the program that you know?-Other"
-* "Requirements Devolve program"
-* "Daily Payment Methods Used for Purchases"
-* "Financial Institutions "
-* "Financial Institutions-Other"
+* "Percent of Yes Responses by Variable" p.12
+* "Other participants in the program that you know?-Other" p.13
+* "Requirements Devolve program" p.17
+* "Daily Payment Methods Used for Purchases" p.24
+* "Financial Institutions " p.27
+* "Financial Institutions-Other" p.28
 * "Reason(s) do you not include your CPF number" p. 37
 * "Reason(s) do you not include your CPF-Other"  p. 38 NFI04a1_Other
 * "Reason(s) do you not include your CPF-Other"  p. 40 NFI04b1_Other
@@ -88,7 +88,8 @@ local vars know_devolve
 		   send_information_method
 		   usage_increases
 		   payment_method_cash
-		   hh_bank_account 
+		   hh_bank_account
+           knows_participant
            ;
 #d cr 
 
@@ -105,7 +106,7 @@ global restricted_sample_vars reason_money_accounts problem_card tax_collection 
                            reason_money_accounts usage_increases purchases_last_week
 						   
 
-local vars municipality_top5
+local vars usage_increases payment_method_cash hh_bank_account
 
 foreach var of local vars {
     preserve
@@ -162,23 +163,23 @@ foreach var of local vars {
     * Plotting
 	** Grouped plot
     if strpos("${grouped_vars}", "`var'") {
-        graph bar (percent),  over(`var') over(income_div, `sortopt') horizontal   nofill missing ///
-        asyvars ///
-        bar(2, color(navy)) ///
-        bar(1, color(midblue))  /// 
-        bar(3, color(ltblue))  ///
-		bar(4, color(gs12))       /// 
-		bar(5, color(gs14))       /// 
-        ytitle("Percentage") ///
-        title("`title'" "(by group)", size(medium)) ///
-        blabel(bar, format(%9.1f) position(outside)) ///
-        note("Note: Number of valid observations = `N'.") ///
-        ylabel(, noticks nogrid nolabels) ///
-        ysize(6) xsize(10)
-		graph export "${github}/Outputs/Figures/`file_name'_grouped.png", replace width(2150)
-        graph export "${overleaf_figs}/`file_name'_grouped.png", replace width(2150)
+        graph bar (percent), over(`var') ///
+            by(income_div, cols(1) title("`title' (by group)", size(medium)) note("Note: Number of valid observations = `N'.")) ///
+            horizontal nofill asyvars ///
+            bar(2, color(navy)) ///
+            bar(1, color(midblue))  ///
+            bar(3, color(ltblue))  ///
+            bar(4, color(gs12)) ///
+            bar(5, color(gs14)) ///
+            ytitle("Percentage")  ///   <- era ytitle(); mude para X por ser horizontal
+            ylabel(none, noticks) ///  <- oculta todos os rótulos do eixo Y
+            blabel(bar, format(%9.1f) position(outside)) ///
+            ysize(6) xsize(10)
 
+        graph export "${github}/Outputs/Figures/`file_name'_grouped.png", replace width(2150)
+        graph export "${overleaf_figs}/`file_name'_grouped.png", replace width(2150)
     }
+
     ** Standard plots
     if strpos("${restricted_sample_vars}", "`var'") {
         * Plot for restricted_sample_vars
