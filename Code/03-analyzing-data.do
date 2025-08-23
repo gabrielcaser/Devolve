@@ -21,6 +21,7 @@
 * "Kind of assistance after the floods-Other" p. 81
 * "Reasons for not collecting the card because of..." p. 90
 * "Reasons not collecting the card-Other" p. 91
+* "Types of problems in Devolve card among beneficiaries" p. 113
 
 
 ******************************************************************************************
@@ -87,12 +88,20 @@ local vars know_devolve
 		   send_information_method
 		   usage_increases
 		   payment_method_cash
+		   hh_bank_account 
            ;
 #d cr 
 
-local vars hh_bank_account
+//local vars tax_essential_goods
 
+* Defining globals to personalize figures
+
+** Vars that will be grouped 
 global grouped_vars usage_increases payment_method_cash hh_bank_account
+
+** Vars that will have sample restricted
+global devolve_sample_vars reason_money_accounts problem_card tax_collection ///
+						   tax_essential_goods
 
 foreach var of local vars {
     preserve
@@ -107,22 +116,12 @@ foreach var of local vars {
     * Extract file name from label (text between parentheses) to save files with the names used on onverleaf
     local file_name = ""
 
-
-	if "`var'" == "municipality_top5" {
-		local file_name = "Graph_Top_Municipalities_Respondents_live"
-	}
-    else {
-        local file_name = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
-        * Remove the parentheses and content from the title for display
-        local title = subinstr("`title'", "(" + "`file_name'" + ")", "", .)
-        * Remove any trailing/leading spaces
-        local title = strtrim("`title'")
-		local file_name = "F_" + "`file_name'"
-    }
-	if "`var'" == "gender" { // for some reason this figure has a different name from the pattern
-        local file_name = "F_Gender"
-    }
-	
+    local file_name = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
+    * Remove the parentheses and content from the title for display
+    local title = subinstr("`title'", "(" + "`file_name'" + ")", "", .)
+    * Remove any trailing/leading spaces
+    local title = strtrim("`title'")
+	local file_name = "F_" + "`file_name'" 
     
     * Getting number of observations
 	if inlist("`var'", "municipality_top5") { // string vars
@@ -156,7 +155,8 @@ foreach var of local vars {
         local sortopt = "sort(1) descending"
     }
 
-    * Plotting	
+    * Plotting
+	** Grouped plot
     if strpos("${grouped_vars}", "`var'") {
 		
 		local file_name = "`file_name'" + "_income"
@@ -174,10 +174,31 @@ foreach var of local vars {
         blabel(bar, format(%9.1f) position(outside)) ///
         note("Note: Number of valid observations = `N'.") ///
         ylabel(, noticks nogrid nolabels) ///
-        ysize(6) xsize(10) 
-		
+        ysize(6) xsize(10)
+		graph export "${github}/Outputs/Figures/`file_name'.png", replace width(2150)
+        graph export "${overleaf_figs}/`file_name'.png", replace width(2150)
+
     }
+	** Standard plots
     else {
+        if strpos("${devolve_sample_vars}", "`var'") {
+            * Plot for participates_devolve == 1
+			count if (!missing(`var') | `var' == .d) & participates_devolve == 1
+			local N_partsample : display r(N)
+			
+            graph bar (percent) if participates_devolve == 1, over(`var', `sortopt') horizontal nofill missing ///
+            bar(1, color(navy)) ///
+            ytitle("Percentage") ///
+            title("`title' (Part=1)", size(medium)) ///
+            blabel(bar, format(%9.1f) position(outside)) ///
+            note("Note: Number of valid observations = `N_partsample'.") ///
+            ylabel(, noticks nogrid nolabels) ///
+            ysize(6) xsize(10)
+            graph export "${github}/Outputs/Figures/`file_name'_partsample.png", replace width(2150)
+            graph export "${overleaf_figs}/`file_name'_partsample.png", replace width(2150)
+
+        }
+        * Plot for full sample
         graph bar (percent), over(`var', `sortopt') horizontal nofill missing ///
         bar(1, color(navy)) ///
         ytitle("Percentage") ///
@@ -186,10 +207,8 @@ foreach var of local vars {
         note("Note: Number of valid observations = `N'.") ///
         ylabel(, noticks nogrid nolabels) ///
         ysize(6) xsize(10)
+        graph export "${github}/Outputs/Figures/`file_name'.png", replace width(2150)
+        graph export "${overleaf_figs}/`file_name'.png", replace width(2150)
     }
-
-    * Saving
-    graph export "${github}/Outputs/Figures/`file_name'.png", replace width(2150)
-
     restore
 }
