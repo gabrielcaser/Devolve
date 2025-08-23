@@ -161,6 +161,7 @@ foreach var of local vars {
     }
 
     * Plotting
+	
 	** Grouped plot
     if strpos("${grouped_vars}", "`var'") {
         graph bar (percent), over(`var') ///
@@ -171,8 +172,8 @@ foreach var of local vars {
             bar(3, color(ltblue))  ///
             bar(4, color(gs12)) ///
             bar(5, color(gs14)) ///
-            ytitle("Percentage")  ///   <- era ytitle(); mude para X por ser horizontal
-            ylabel(none, noticks) ///  <- oculta todos os rótulos do eixo Y
+            ytitle("Percentage")  ///  
+            ylabel(none, noticks) /// 
             blabel(bar, format(%9.1f) position(outside)) ///
             ysize(6) xsize(10)
 
@@ -212,6 +213,7 @@ foreach var of local vars {
         graph export "${github}/Outputs/Figures/`file_name'_partsample.png", replace width(2150)
         graph export "${overleaf_figs}/`file_name'_partsample.png", replace width(2150)
     }
+	
     * Plot for full sample
     graph bar (percent), over(`var', `sortopt') horizontal nofill missing ///
         bar(1, color(navy)) ///
