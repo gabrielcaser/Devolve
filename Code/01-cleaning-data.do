@@ -516,13 +516,13 @@ label define lblcpf_on_invoice_rule 1 "Strongly Fair" 2 "Fair" 3 "Not Fair" 4 "S
 label values IET06 lblcpf_on_invoice_rule
 
 * Increase tax on food
-label var IET07 "Support for equalizing tax on food with other products, even if it increases food costs"
+label var IET07 "Support equalizing food tax, even if prices rise"
 replace IET07 = .d if IET07 == 666
 label define lblincrease_tax_on_food 1 "Totally in favor" 2 "Favor" 3 "Against" 4 "Totally against" .d "Don't know"
 label values IET07 lblincrease_tax_on_food
 
 * Increase tax on food with reimbursement
-label var IET08 "Support for increasing tax on food if Devolve program participants receive reimbursement"
+label var IET08 "Support for increasing tax on food if Devolve participants get reimbursement"
 replace IET08 = .d if IET08 == 666
 label define lbltax_on_foodreturned 1 "Totally in favor" 2 "Favor" 3 "Against" 4 "Totally against" .d "Don't know"
 label values IET08 lbltax_on_foodreturned

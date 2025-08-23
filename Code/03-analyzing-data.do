@@ -92,7 +92,6 @@ local vars know_devolve
            ;
 #d cr 
 
-//local vars tax_essential_goods
 
 * Defining globals to personalize figures
 
@@ -100,8 +99,13 @@ local vars know_devolve
 global grouped_vars usage_increases payment_method_cash hh_bank_account
 
 ** Vars that will have sample restricted
-global devolve_sample_vars reason_money_accounts problem_card tax_collection ///
-						   tax_essential_goods
+global restricted_sample_vars reason_money_accounts problem_card tax_collection ///
+						   tax_essential_goods icms_rate_rgs increase_tax_on_food ///
+						   tax_on_foodreturned tax_food_all tax_perfumes_makeup ///
+                           reason_money_accounts usage_increases purchases_last_week
+						   
+
+local vars municipality_top5
 
 foreach var of local vars {
     preserve
@@ -158,10 +162,6 @@ foreach var of local vars {
     * Plotting
 	** Grouped plot
     if strpos("${grouped_vars}", "`var'") {
-		
-		local file_name = "`file_name'" + "_income"
-		local title = "`title'" + " (by group)"
-		
         graph bar (percent),  over(`var') over(income_div, `sortopt') horizontal   nofill missing ///
         asyvars ///
         bar(2, color(navy)) ///
@@ -170,36 +170,49 @@ foreach var of local vars {
 		bar(4, color(gs12))       /// 
 		bar(5, color(gs14))       /// 
         ytitle("Percentage") ///
-        title("`title'", size(medium)) ///
+        title("`title'" "(by group)", size(medium)) ///
         blabel(bar, format(%9.1f) position(outside)) ///
         note("Note: Number of valid observations = `N'.") ///
         ylabel(, noticks nogrid nolabels) ///
         ysize(6) xsize(10)
-		graph export "${github}/Outputs/Figures/`file_name'.png", replace width(2150)
-        graph export "${overleaf_figs}/`file_name'.png", replace width(2150)
+		graph export "${github}/Outputs/Figures/`file_name'_grouped.png", replace width(2150)
+        graph export "${overleaf_figs}/`file_name'_grouped.png", replace width(2150)
 
     }
-	** Standard plots
-    else {
-        if strpos("${devolve_sample_vars}", "`var'") {
-            * Plot for participates_devolve == 1
-			count if (!missing(`var') | `var' == .d) & participates_devolve == 1
-			local N_partsample : display r(N)
-			
-            graph bar (percent) if participates_devolve == 1, over(`var', `sortopt') horizontal nofill missing ///
+    ** Standard plots
+    if strpos("${restricted_sample_vars}", "`var'") {
+        * Plot for restricted_sample_vars
+        if inlist("`var'", "purchases_last_week") {
+            local var_restriction hh_bank_account
+            local add_title "(no bank)"
+            local restriction_value 4
+        }
+        else if inlist("`var'", "reason_money_accounts","usage_increases") {
+            local var_restriction participate_nfg
+            local add_title "(nfg=1)"
+            local restriction_value 1
+        }
+        else {
+            local var_restriction participates_devolve
+            local add_title "(devolve=1)"
+            local restriction_value 1
+        }
+        count if (!missing(`var') | `var' == .d) & `var_restriction' == `restriction_value'
+        local N_partsample : display r(N)
+        
+        graph bar (percent) if `var_restriction' == 1, over(`var', `sortopt') horizontal nofill missing ///
             bar(1, color(navy)) ///
             ytitle("Percentage") ///
-            title("`title' (Part=1)", size(medium)) ///
+            title("`title' `add_title'", size(medium)) ///
             blabel(bar, format(%9.1f) position(outside)) ///
-            note("Note: Number of valid observations = `N_partsample'.") ///
+            note("Note: Number of valid observations = `N_partsample'. Sample restricted to `var_restriction' == `restriction_value'.") ///
             ylabel(, noticks nogrid nolabels) ///
             ysize(6) xsize(10)
-            graph export "${github}/Outputs/Figures/`file_name'_partsample.png", replace width(2150)
-            graph export "${overleaf_figs}/`file_name'_partsample.png", replace width(2150)
-
-        }
-        * Plot for full sample
-        graph bar (percent), over(`var', `sortopt') horizontal nofill missing ///
+        graph export "${github}/Outputs/Figures/`file_name'_partsample.png", replace width(2150)
+        graph export "${overleaf_figs}/`file_name'_partsample.png", replace width(2150)
+    }
+    * Plot for full sample
+    graph bar (percent), over(`var', `sortopt') horizontal nofill missing ///
         bar(1, color(navy)) ///
         ytitle("Percentage") ///
         title("`title'", size(medium)) ///
@@ -207,8 +220,8 @@ foreach var of local vars {
         note("Note: Number of valid observations = `N'.") ///
         ylabel(, noticks nogrid nolabels) ///
         ysize(6) xsize(10)
-        graph export "${github}/Outputs/Figures/`file_name'.png", replace width(2150)
-        graph export "${overleaf_figs}/`file_name'.png", replace width(2150)
-    }
+    graph export "${github}/Outputs/Figures/`file_name'.png", replace width(2150)
+    graph export "${overleaf_figs}/`file_name'.png", replace width(2150)
+
     restore
 }
