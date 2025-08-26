@@ -97,7 +97,12 @@ local vars know_devolve
 * Defining globals to personalize figures
 
 ** Vars that will be grouped 
-global grouped_vars usage_increases payment_method_cash hh_bank_account
+global grouped_income_vars  usage_increases payment_method_cash hh_bank_account ///
+                            bank_account_caixa cpf_invoice_freq
+global grouped_age_vars     hh_bank_account reason_no_receipt freq_cpf_na
+global grouped_devolve_vars payment_method_cash 
+global grouped_gender_vars  hh_bank_account
+global grouped_vars ${grouped_income_vars} ${grouped_age_vars} ${grouped_devolve_vars} ${grouped_gender_vars}
 
 ** Vars that will have sample restricted
 global restricted_sample_vars reason_money_accounts problem_card tax_collection ///
@@ -106,7 +111,7 @@ global restricted_sample_vars reason_money_accounts problem_card tax_collection 
                            reason_money_accounts usage_increases purchases_last_week
 						   
 
-local vars usage_increases payment_method_cash hh_bank_account
+local vars bank_account_caixa // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
 
 foreach var of local vars {
     preserve
@@ -120,7 +125,6 @@ foreach var of local vars {
 
     * Extract file name from label (text between parentheses) to save files with the names used on onverleaf
     local file_name = ""
-
     local file_name = substr("`title'", strpos("`title'", "(")+1, strpos("`title'", ")")-strpos("`title'", "(")-1)
     * Remove the parentheses and content from the title for display
     local title = subinstr("`title'", "(" + "`file_name'" + ")", "", .)
@@ -164,11 +168,30 @@ foreach var of local vars {
 	
 	** Grouped plot
     if strpos("${grouped_vars}", "`var'") {
+        if inlist("`var'", "usage_increases", "payment_method_cash", "hh_bank_account", "bank_account_caixa", "cpf_invoice_freq") {
+            local group_var income_div
+            local group_label "income"
+            local extra_note " Don't Know group was omitted."
+        }
+        else if inlist("`var'", "hh_bank_account", "reason_no_receipt", "freq_cpf_na") {
+            local group_var age_div
+            local group_label "age"
+        }
+        else if inlist("`var'", "payment_method_cash") {
+            local group_var participates_devolve
+            local group_label "participation"
+        }
+        else if inlist("`var'", "hh_bank_account") {
+            local group_var gender
+            local group_label "gender"
+        }
+
         graph bar (percent), over(`var') ///
-            by(income_div, cols(1) title("`title' (by group)", size(medium)) note("Note: Number of valid observations = `N'.")) ///
+            by(`group_var', cols(1) title("`title' (by `group_label')", size(medium)) ///
+               note("Note: Number of valid observations = `N'.`extra_note'")) ///
             horizontal nofill asyvars ///
-            bar(2, color(navy)) ///
-            bar(1, color(midblue))  ///
+            bar(1, color(navy)) ///
+            bar(2, color(midblue))  ///
             bar(3, color(ltblue))  ///
             bar(4, color(gs12)) ///
             bar(5, color(gs14)) ///
@@ -177,8 +200,8 @@ foreach var of local vars {
             blabel(bar, format(%9.1f) position(outside)) ///
             ysize(6) xsize(10)
 
-        graph export "${github}/Outputs/Figures/`file_name'_grouped.png", replace width(2150)
-        graph export "${overleaf_figs}/`file_name'_grouped.png", replace width(2150)
+        graph export "${github}/Outputs/Figures/`file_name'_`group_label'.png", replace width(2150)
+        graph export "${overleaf_figs}/`file_name'_`group_label'.png", replace width(2150)
     }
 
     ** Standard plots
@@ -199,9 +222,12 @@ foreach var of local vars {
             local add_title "(devolve=1)"
             local restriction_value 1
         }
+
+        * Counting number of observations for the restricted sample
         count if (!missing(`var') | `var' == .d) & `var_restriction' == `restriction_value'
         local N_partsample : display r(N)
-        
+
+        * Plotting
         graph bar (percent) if `var_restriction' == 1, over(`var', `sortopt') horizontal nofill missing ///
             bar(1, color(navy)) ///
             ytitle("Percentage") ///
