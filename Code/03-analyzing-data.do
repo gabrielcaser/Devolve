@@ -88,8 +88,13 @@ local vars know_devolve
 		   send_information_method
 		   usage_increases
 		   payment_method_cash
+           payment_method_cash_2
 		   hh_bank_account
+           hh_bank_account_2
+           hh_bank_account_3
            knows_participant
+           bank_account_caixa
+           
            ;
 #d cr 
 
@@ -97,22 +102,38 @@ local vars know_devolve
 * Defining globals to personalize figures
 
 ** Vars that will be grouped 
-global grouped_income_vars  usage_increases payment_method_cash hh_bank_account ///
-                            bank_account_caixa cpf_invoice_freq
-global grouped_age_vars     hh_bank_account reason_no_receipt freq_cpf_na
-global grouped_devolve_vars payment_method_cash 
-global grouped_gender_vars  hh_bank_account
-global grouped_vars ${grouped_income_vars} ${grouped_age_vars} ${grouped_devolve_vars} ${grouped_gender_vars}
+global grouped_income_vars        usage_increases payment_method_cash hh_bank_account bank_account_caixa cpf_invoice_freq
+global grouped_age_vars           hh_bank_account_2 reason_no_receipt freq_cpf_na
+global grouped_participation_vars payment_method_cash_2
+global grouped_gender_vars        hh_bank_account_3
+global grouped_vars ${grouped_income_vars} ${grouped_age_vars} ${grouped_participation_vars} ${grouped_gender_vars}
 
 ** Vars that will have sample restricted
 global restricted_sample_vars reason_money_accounts problem_card tax_collection ///
 						   tax_essential_goods icms_rate_rgs increase_tax_on_food ///
 						   tax_on_foodreturned tax_food_all tax_perfumes_makeup ///
-                           reason_money_accounts usage_increases purchases_last_week
+                           usage_increases purchases_last_week
 						   
 
-local vars bank_account_caixa // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
+local vars hh_bank_account // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
 
+* Duplicating vars that will produce more than one grouped plot, mantendo os labels originais
+gen hh_bank_account_2     = hh_bank_account // for age grouped plot
+gen hh_bank_account_3     = hh_bank_account // for gender grouped plot
+gen payment_method_cash_2 = payment_method_cash // for participation grouped plot
+
+label variable hh_bank_account_2 "`:     variable label hh_bank_account'"
+label variable hh_bank_account_3 "`:     variable label hh_bank_account'"
+label variable payment_method_cash_2 "`: variable label payment_method_cash'"
+
+cap label define lblhh_bank_account     1 "Yes, you have" 2 "Yes, other person have" 3 "Yes, you and other family members have" 4 "No, neither you nor anyone" .d "Don't know"
+cap label define lblpayment_method_cash 1 "Yes" 0 "No"
+
+label values hh_bank_account_2     lblhh_bank_account
+label values hh_bank_account_3     lblhh_bank_account
+label values payment_method_cash_2 lblpayment_method_cash
+
+* Loop
 foreach var of local vars {
     preserve
     * Exceptions by variable
@@ -168,22 +189,25 @@ foreach var of local vars {
 	
 	** Grouped plot
     if strpos("${grouped_vars}", "`var'") {
-        if inlist("`var'", "usage_increases", "payment_method_cash", "hh_bank_account", "bank_account_caixa", "cpf_invoice_freq") {
+        if strpos("${grouped_income_vars}", "`var'") {
             local group_var income_div
             local group_label "income"
             local extra_note " Don't Know group was omitted."
         }
-        else if inlist("`var'", "hh_bank_account", "reason_no_receipt", "freq_cpf_na") {
+        else if strpos("${grouped_age_vars}", "`var'") {
             local group_var age_div
             local group_label "age"
+            local extra_note ""
         }
-        else if inlist("`var'", "payment_method_cash") {
+        else if strpos("${grouped_participation_vars}", "`var'") {
             local group_var participates_devolve
             local group_label "participation"
+            local extra_note ""
         }
-        else if inlist("`var'", "hh_bank_account") {
+        else if strpos("${grouped_gender_vars}", "`var'") {
             local group_var gender
             local group_label "gender"
+            local extra_note ""
         }
 
         graph bar (percent), over(`var') ///
