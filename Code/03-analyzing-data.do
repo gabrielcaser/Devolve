@@ -51,6 +51,7 @@ local vars know_devolve
            type_cpf
            freq_cpf 
            cpf_invoice_freq
+           cpf_invoice_freq_2
            freq_cpf_na
            monthly_purchases_cat
            card_devolve
@@ -106,7 +107,8 @@ global grouped_income_vars        usage_increases payment_method_cash hh_bank_ac
 global grouped_age_vars           hh_bank_account_2 reason_no_receipt freq_cpf_na
 global grouped_participation_vars payment_method_cash_2
 global grouped_gender_vars        hh_bank_account_3
-global grouped_vars ${grouped_income_vars} ${grouped_age_vars} ${grouped_participation_vars} ${grouped_gender_vars}
+global grouped_cash_vars          cpf_invoice_freq_2
+global grouped_vars ${grouped_income_vars} ${grouped_age_vars} ${grouped_participation_vars} ${grouped_gender_vars} ${grouped_cash_vars}
 
 ** Vars that will have sample restricted
 global restricted_sample_vars reason_money_accounts problem_card tax_collection ///
@@ -115,23 +117,27 @@ global restricted_sample_vars reason_money_accounts problem_card tax_collection 
                            usage_increases purchases_last_week
 						   
 
-local vars hh_bank_account // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
+local vars cpf_invoice_freq_2 // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
 
 * Duplicating vars that will produce more than one grouped plot, mantendo os labels originais
 gen hh_bank_account_2     = hh_bank_account // for age grouped plot
 gen hh_bank_account_3     = hh_bank_account // for gender grouped plot
 gen payment_method_cash_2 = payment_method_cash // for participation grouped plot
+gen cpf_invoice_freq_2    = cpf_invoice_freq  // for cash grouped plot
 
 label variable hh_bank_account_2 "`:     variable label hh_bank_account'"
 label variable hh_bank_account_3 "`:     variable label hh_bank_account'"
 label variable payment_method_cash_2 "`: variable label payment_method_cash'"
+label variable cpf_invoice_freq_2 "`:    variable label cpf_invoice_freq'"
 
 cap label define lblhh_bank_account     1 "Yes, you have" 2 "Yes, other person have" 3 "Yes, you and other family members have" 4 "No, neither you nor anyone" .d "Don't know"
 cap label define lblpayment_method_cash 1 "Yes" 0 "No"
+cap label define lblcpf_invoice_freq    1 "Always" 2 "Sometimes" 3 "Rarely" 4 "Never" .d "Don't know"
 
 label values hh_bank_account_2     lblhh_bank_account
 label values hh_bank_account_3     lblhh_bank_account
 label values payment_method_cash_2 lblpayment_method_cash
+label values cpf_invoice_freq_2    lblcpf_invoice_freq
 
 * Loop
 foreach var of local vars {
@@ -207,6 +213,11 @@ foreach var of local vars {
         else if strpos("${grouped_gender_vars}", "`var'") {
             local group_var gender
             local group_label "gender"
+            local extra_note ""
+        }
+        else if strpos("${grouped_cash_vars}", "`var'") {
+            local group_var payment_method_cash
+            local group_label "cash"
             local extra_note ""
         }
 
