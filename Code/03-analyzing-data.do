@@ -1,10 +1,10 @@
 * Analyzing Data - This program produces the figures 
 
 *********************** MORE COMPLEX FIGURES THAT I HAVE NOT REPLICATED YET **************
-* "Percent of Yes Responses by Variable" p.12
+* OK "Percent of Yes Responses by Variable" p.12
 * "Other participants in the program that you know?-Other" p.13
 * "Requirements Devolve program" p.17
-* "Daily Payment Methods Used for Purchases" p.24
+* OK "Daily Payment Methods Used for Purchases" p.24
 * "Financial Institutions " p.27
 * "Financial Institutions-Other" p.28
 * "Reason(s) do you not include your CPF number" p. 37
@@ -115,9 +115,18 @@ global restricted_sample_vars reason_money_accounts problem_card tax_collection 
 						   tax_essential_goods icms_rate_rgs increase_tax_on_food ///
 						   tax_on_foodreturned tax_food_all tax_perfumes_makeup ///
                            usage_increases purchases_last_week
-						   
+					
+					
+					
+					
 
-local vars cpf_invoice_freq_2 // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
+local vars other_beneficiaries_factor // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
+
+
+
+
+
+
 
 * Duplicating vars that will produce more than one grouped plot, mantendo os labels originais
 gen hh_bank_account_2     = hh_bank_account // for age grouped plot

@@ -213,6 +213,8 @@ restore
 gen municipality_top5 = municipality
 replace municipality_top5 = "Other" if !inlist(municipality, `top5')
 label var municipality_top5 "(DEM01) Top 5 municipalities where respondents live"
+
+
 *-------------------------------------------------------------------------------	
 * Merge with urban/rural classification
 *-------------------------------------------------------------------------------	
