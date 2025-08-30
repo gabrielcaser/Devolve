@@ -365,7 +365,14 @@ keep ///
 	flood_aid ///
 	gender ///
 	municipality_top5 ///
-	household_size
+	household_size ///
+	aid_finance ///
+	aid_cleaning ///
+	aid_dk ///
+	aid_material ///
+	aid_medic ///
+	aid_reconstruction /// 
+	aid_other
 
 *-------------------------------------------------------------------------------	
 * Save data set

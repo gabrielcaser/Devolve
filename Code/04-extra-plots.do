@@ -7,17 +7,17 @@
 * OK "Daily Payment Methods Used for Purchases" p.24
 * OK "Financial Institutions " p.27
 * "Financial Institutions-Other" p.28
-* "Reason(s) do you not include your CPF number" p. 37
+* OK "Reason(s) do you not include your CPF number" p. 37
 * "Reason(s) do you not include your CPF-Other"  p. 38 NFI04a1_Other
 * "Reason(s) do you not include your CPF-Other"  p. 40 NFI04b1_Other
-* "Reason(s) do you not include your CPF number" p. 41
-* "Issues with Using the Devolve-ICMS Citizen Card" p. 51
+* OK "Reason(s) do you not include your CPF number" p. 41
+* OK "Issues with Using the Devolve-ICMS Citizen Card" p. 51
 * "Problems using Citizen Card-Other" p. 52
 * "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 59 icms_rate2
 * "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 60 icms_label_with_counts
 * "Reasons not participating Nota Fiscal Program-Other" p. 71 other_NFG02Aa
 * "Days Unable to Enter Home Due to Floods" p. 78
-* "Type of Assistance Received for Flood Recovery" p. 80
+* OK "Type of Assistance Received for Flood Recovery" p. 80
 * "Kind of assistance after the floods-Other" p. 81
 * "Reasons for not collecting the card because of..." p. 90
 * "Reasons not collecting the card-Other" p. 91
@@ -27,9 +27,10 @@
 use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 
 * List here the prefixes you want to run
-local vars_cat other_beneficiaries payment_method bank_account reason_not_cpf reason_da_not_cpf
+local vars_cat other_beneficiaries payment_method bank_account reason_not_cpf reason_da_not_cpf problem_card aid card_collection
 
-//local vars_cat payment_method
+
+local vars_cat card_collection
 
 foreach var_cat of local vars_cat {
 
@@ -82,6 +83,27 @@ foreach var_cat of local vars_cat {
             replace category = "Not interested in invoices" if category == "Interest"
             replace category = "Data Privacy" if category == "Information"
             replace category = "Don't know the benefits" if category == "Benefits"
+        }
+        else if "`var_cat'" == "problem_card" {
+            local title = "Types of problems with the Devolve card"
+            replace category = "Not accepted at the store" if category == "Na"
+            replace category = "Transfers are delayed or don't arrive" if category == "Transfer"
+            replace category = "Don't know how much money in the card" if category == "Money"
+            replace category = "Don't know the PIN" if category == "Password"
+            replace category = "Don't know" if category == "Dk"
+        }
+        else if "`var_cat'" == "aid" {
+            local title = "Type of assistance received for flood recovery"
+        }
+        else if "`var_cat'" == "card_collection" {
+            local title = "Reasons for not collecting the Devolve-ICMS Citizen Card"
+            replace category = "Didn't know could participate" if category == "P"
+            replace category = "Didn't know the program" if category == "Dp"
+            replace category = "Location" if category == "L"
+            replace category = "Work" if category == "W"
+            replace category = "Kids" if category == "K"
+            replace category = "Distance" if category == "D"
+            replace category = "Money for transport" if category == "T"
         }
         else {
             local title = "`var_cat'"
