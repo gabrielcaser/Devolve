@@ -66,10 +66,14 @@ local vars know_devolve
            hh_bank_account_3
            knows_participant
            bank_account_caixa
-           
+           PAG03a_Other_encoded
+           INU04a_Other_encoded
+           CCD09_Other_encoded
+           DEV02a_Other_encoded
+           CCD07_Other_encoded
+           NFG02Aa_Other_encoded
            ;
 #d cr 
-
 
 * Defining globals to personalize figures
 
@@ -91,7 +95,7 @@ global restricted_sample_vars reason_money_accounts problem_card tax_collection 
 					
 					
 
-local vars other_beneficiaries_factor // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
+local vars NFG02Aa_Other_encoded // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
 
 
 

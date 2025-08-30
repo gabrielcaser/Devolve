@@ -98,6 +98,8 @@ label var DEV02a_555 "Who are the other participants in the program that you kno
 label define lblother_beneficiaries_other 1 "Yes" 0 "No"
 label values DEV02a_555 lblother_beneficiaries_other
 
+label var DEV02aoth "Other participants in the program that you know - specify"
+
 * Other known beneficiaries - Don't know
 label var DEV02a_666 "Who are the other participants in the program that you know?- Don't know"
 label define lblother_beneficiaries_dontknow 1 "Yes" 0 "No"
@@ -242,6 +244,8 @@ label var PAG03a_555 "Bank account banco Other"
 label define lblbank_account_other 1 "Yes" 0 "No"
 label values PAG03a_555 lblbank_account_other
 
+label var PAG03aoth "Bank account if Other was selected"
+
 label var PAG03a_666 "Bank account banco don't know"
 label define lblbank_account_dontknow 1 "Yes" 0 "No"
 label values PAG03a_666 lblbank_account_dontknow
@@ -312,6 +316,8 @@ label var NFI04a1_555 "Reasons not to include CPF other"
 label define lblreason_not_cpf_other 1 "Yes" 0 "No"
 label values NFI04a1_555 lblreason_not_cpf_other
 
+label var NFI04a1oth "Other reason not to include CPF when not asked"
+
 * Frequency of asking for CPF when not asked by attendant
 label var NFI04b "Frequency of CPF use when attendence does not ask"
 replace NFI04b = .d if NFI04b == 666
@@ -342,6 +348,8 @@ label values NFI04b1_5 lblreason_not_cpf_information_da
 label var NFI04b1_555 "Reasons not to include CPF other"
 label define lblreason_not_cpf_other_da 1 "Yes" 0 "No"
 label values NFI04b1_555 lblreason_not_cpf_other_da
+
+label var NFI04b1oth "Other reason not to include CPF when asked"
 
 * Monthly purchases
 label var NFI05 "Monthly Purchases"
@@ -409,6 +417,8 @@ label var CCD07_555 "Other"
 label define lblproblem_card_other 1 "Yes" 0 "No"
 label values CCD07_555 lblproblem_card_other
 
+label var CCD07oth "Problem with the card if selected 'Other'"
+
 label var CCD07_666 "Don't know"
 label define lblproblem_card_dk 1 "Yes" 0 "No"
 label values CCD07_666 lblproblem_card_dk
@@ -454,6 +464,8 @@ label values CCD09_555 lblcard_collection_other
 label var CCD09_666 "Don't collect the card because don't know"
 label define lblcard_collection_dk 1 "Yes" 0 "No"
 label values CCD09_666 lblcard_collection_dk
+
+label var CCD09oth "Reason don't collect the card if selected 'Other'"
 
 * Concern about nearby stores
 label var CCD10 "Not stores nearby"
@@ -557,6 +569,8 @@ replace NFG02A = .d if NFG02A == 666
 label define lblreason_nfg 1 "Registration" 2 "Information" 3 "Government distrusts" 4 "Program requirements" 5 "Registration attempt failed" 555 "Other" .d "Don't know"
 label values NFG02A lblreason_nfg
 
+label var NFG02Aaoth "Other reason not participating in NFG program"
+
 * Wants to receive information about the program
 label var NFG03 "Send information on how to apply for the program"
 label define lblsend_information 1 "Yes" 0 "No" .d "Don't know"
@@ -637,6 +651,8 @@ label values INU04a_555 lblaid_other
 label var INU04a_666 "Received assistance to recover from this year's floods-don't know"
 label define lblaid_dk 1 "Yes" 0 "No" .d "Don't know"
 label values INU04a_666 lblaid_dk
+
+label var INU04aoth "Other assistance received after floods"
 
 * Dropping variables with only missing values
 ds, has(type numeric)

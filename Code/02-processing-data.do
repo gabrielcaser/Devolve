@@ -1,7 +1,17 @@
 * Description: This script processes the Devolve-ICMS survey data and labeling variables for analysis. 
 
 * Loading dataset
-use "${dropbox}\data\intermediary\devolve_survey_clean.dta", replace // 1,039 obs and 236 variables 
+use "${dropbox}\data\intermediary\devolve_survey_clean.dta", replace // 1,039 obs and 236 variables
+
+* Renaming vars to influence the label
+rename INU04aoth INU04a_Other
+rename PAG03aoth PAG03a_Other
+rename CCD09oth  CCD09_Other
+rename DEV02aoth DEV02a_Other
+rename CCD07oth  CCD07_Other
+rename NFG02Aaoth NFG02Aa_Other
+rename NFI04a1oth NFI04a1_Other
+rename NFI04b1oth NFI04b1_Other
 
 * Adding name of the variable at the begining of the label inside ()
 foreach var of varlist _all {
@@ -214,6 +224,74 @@ gen municipality_top5 = municipality
 replace municipality_top5 = "Other" if !inlist(municipality, `top5')
 label var municipality_top5 "(DEM01) Top 5 municipalities where respondents live"
 
+* Encoded vars that are openly filed when person answered "Other" 
+foreach var in PAG03a_Other INU04a_Other CCD09_Other DEV02a_Other CCD07_Other NFG02Aa_Other NFI04a1_Other NFI04b1_Other {
+	if `var' == PAG03a_Other {
+		replace `var' = "Government aid"     if `var' == "Auxlio do governo"
+		replace `var' = "Government aid"     if `var' == "Auxlio do Governo do Estado"
+		replace `var' = "Building materials" if `var' == "Materiais de construção"
+	}
+	if `var' == CCD09_Other {
+		replace CCD09_Other = "Participant has reduced mobility" ///
+			if CCD09_Other == "Participante tem mobilidade reduzida e não consegue se deslocar até o local"
+		replace CCD09_Other = "No interest in receiving" ///
+			if CCD09_Other == "nao tem interesse de receber"
+		replace CCD09_Other = "Card was not there when he went" ///
+			if CCD09_Other == "chegou a tentar retirar mas não havia o cartão quando foi ao local"
+		replace CCD09_Other = "Card at Banrisul, update pending" ///
+			if CCD09_Other == "Recebeu informação da escola de que tinha direito e que o cartão estava no Banrisul, precisava desbloquear. Ligou para o 0800 e informaram que precisava atualizar cadastro. Não foi feito."
+		replace CCD09_Other = "Does not live alone" ///
+			if CCD09_Other == "Não mora sozinha"
+		replace CCD09_Other = "Center confirmed no benefit" ///
+			if CCD09_Other == "porque ligou na central e falaram que não tem direito ao beneficio"
+		replace CCD09_Other = "Card reading error" ///
+			if CCD09_Other == "Disse que está afastada/enconstada e não tem direito ao benefício"
+		replace CCD09_Other = "Benefit requirements unmet" ///
+			if CCD09_Other == "Considera que não cumpre os requisitos para receber o benefício"
+	}
+	if `var' == DEV02a_Other {
+		replace DEV02a_Other = "Neighbors"     if DEV02a_Other == "Vizinhos"
+		replace DEV02a_Other = "Coworkers"     if DEV02a_Other == "Colegas de trabalho"
+		replace DEV02a_Other = "Acquaintances" if inlist(DEV02a_Other, "conhecidos", "Conhecidos", "Conhecidos.")
+	}
+	if `var' == CCD07_Other {
+		replace CCD07_Other = "System down" if CCD07_Other == "Sistema fora do ar"
+		replace CCD07_Other = "A Overload and deposit failure" if CCD07_Other == "Sistema fica fora do ar quando o dinheiro é depositado ou sobrecarga de usuários comparando"
+		replace CCD07_Other = "Card reading error" if CCD07_Other == "Erro de leitura do cartão na máquina da loja/ Máquina da loja travou"
+	}
+	if `var' == NFG02Aa_Other {
+		replace NFG02Aa_Other = "Does not know the program" if NFG02Aa_Other == "Não conhece bem o programa Nota Fiscal Gaúcha"
+		replace NFG02Aa_Other = "Never tried to register" if NFG02Aa_Other == "Nunca tentou se cadastrar"
+		replace NFG02Aa_Other = "Can't access the application" if NFG02Aa_Other == "Não consegue acessar o aplicativo"
+		replace NFG02Aa_Other = "Lack of interest" if NFG02Aa_Other == "Não tem interesse em participar"
+	}
+	if `var' == NFI04a1_Other {
+		replace NFI04a1_Other = "Forget to request" if NFI04a1_Other == "Esquece de solicitar"
+		replace NFI04a1_Other = "Lack of time/hurry" if NFI04a1_Other == "Falta de tempo/ pressa"
+		replace NFI04a1_Other = "Not included for small purchases" if NFI04a1_Other == "Compras de pequeno valor não inclui o CPF"
+	}
+	if `var' == NFI04b1_Other {
+		replace NFI04b1_Other = "Forget to request" if NFI04b1_Other == "Esquece de solicitar"
+		replace NFI04b1_Other = "Attendant didn't requested it" if NFI04b1_Other == "Não inclui o CPF quando o atendente não solicita"
+		replace NFI04b1_Other = "Not included for small purchases" if NFI04b1_Other == "Compras de pequeno valor não inclui o CPF"
+	}
+
+	// Calculate percentage for each value to change small categories for "Other"
+	preserve
+		contract `var'
+		drop if `var' == ""
+		egen total_freq = sum(_freq)
+		gen pct = 100 * _freq / total_freq
+		drop _freq total_freq
+		tempfile freqdata
+		save `freqdata', replace
+	restore
+	merge m:1 `var' using `freqdata', nogen
+	replace `var' = "Other" if pct < 10
+	drop pct
+	encode `var', gen(`var'_encoded)
+}
+
 
 *-------------------------------------------------------------------------------	
 * Merge with urban/rural classification
@@ -372,7 +450,16 @@ keep ///
 	aid_material ///
 	aid_medic ///
 	aid_reconstruction /// 
-	aid_other
+	aid_other ///
+	PAG03a_Other_encoded ///
+	INU04a_Other_encoded ///
+	CCD09_Other_encoded ///
+	DEV02a_Other_encoded ///
+	CCD07_Other_encoded ///
+	NFG02Aa_Other_encoded ///
+	NFI04a1_Other_encoded ///
+	NFI04b1_Other_encoded
+
 
 *-------------------------------------------------------------------------------	
 * Save data set
