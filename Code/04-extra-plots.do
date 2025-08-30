@@ -1,27 +1,28 @@
 * This do-file creates a few extra plots for the slides
 
 *********************** MORE COMPLEX FIGURES THAT I HAVE NOT REPLICATED YET **************
+* "Requirements Devolve program" p.17
+* "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 59 icms_rate2
+* "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 60 icms_label_with_counts
+* "Days Unable to Enter Home Due to Floods" p. 78
+* "Types of problems in Devolve card among beneficiaries" p. 113
 * OK "Percent of Yes Responses by Variable" p.12
 * OK "Other participants in the program that you know?-Other" p.13
-* "Requirements Devolve program" p.17
 * OK "Daily Payment Methods Used for Purchases" p.24
 * OK "Financial Institutions " p.27
 * OK "Financial Institutions-Other" p.28
 * OK "Reason(s) do you not include your CPF number" p. 37
-* "Reason(s) do you not include your CPF-Other"  p. 38 NFI04a1_Other
-* "Reason(s) do you not include your CPF-Other"  p. 40 NFI04b1_Other
+* OK "Reason(s) do you not include your CPF-Other"  p. 38 NFI04a1_Other
+* OK "Reason(s) do you not include your CPF-Other"  p. 40 NFI04b1_Other
 * OK "Reason(s) do you not include your CPF number" p. 41
 * OK "Issues with Using the Devolve-ICMS Citizen Card" p. 51
 * OK "Problems using Citizen Card-Other" p. 52
-* "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 59 icms_rate2
-* "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 60 icms_label_with_counts
 * OK "Reasons not participating Nota Fiscal Program-Other" p. 71 other_NFG02Aa
-* "Days Unable to Enter Home Due to Floods" p. 78
 * OK "Type of Assistance Received for Flood Recovery" p. 80
 * OK "Kind of assistance after the floods-Other" p. 81
 * OK "Reasons for not collecting the card because of..." p. 90
 * OK "Reasons not collecting the card-Other" p. 91
-* "Types of problems in Devolve card among beneficiaries" p. 113
+
 
 * Load dataset
 use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs

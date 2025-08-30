@@ -72,6 +72,8 @@ local vars know_devolve
            DEV02a_Other_encoded
            CCD07_Other_encoded
            NFG02Aa_Other_encoded
+           NFI04a1_Other_encoded
+           NFI04b1_Other_encoded
            ;
 #d cr 
 
@@ -95,7 +97,7 @@ global restricted_sample_vars reason_money_accounts problem_card tax_collection 
 					
 					
 
-local vars NFG02Aa_Other_encoded // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
+local vars NFI04a1_Other_encoded NFI04b1_Other_encoded // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
 
 
 
