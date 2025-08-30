@@ -66,15 +66,15 @@ rename NFI04a1_1                    reason_not_cpf_time
 rename NFI04a1_2                    reason_not_cpf_number
 rename NFI04a1_4                    reason_not_cpf_interest
 rename NFI04a1_3                    reason_not_cpf_benefits
-rename NFI04a1_5                    reason_not_cpf_inofrmation
+rename NFI04a1_5                    reason_not_cpf_information
 rename NFI04a1_555                  reason_not_cpf_other
 rename NFI04b                       freq_cpf_na
-rename NFI04b1_1                    reason_not_cpf_time_da
-rename NFI04b1_2                    reason_not_cpf_number_da
-rename NFI04b1_4                    reason_not_cpf_interest_dat
-rename NFI04b1_3                    reason_not_cpf_benefits_da
-rename NFI04b1_5                    reason_not_cpf_inofrmation_da
-rename NFI04b1_555                  reason_not_cpf_other_da
+rename NFI04b1_1                    reason_da_not_cpf_time
+rename NFI04b1_2                    reason_da_not_cpf_number
+rename NFI04b1_4                    reason_da_not_cpf_interest
+rename NFI04b1_3                    reason_da_not_cpf_benefits
+rename NFI04b1_5                    reason_da_not_cpf_information
+rename NFI04b1_555                  reason_da_not_cpf_other
 rename NFI05                        monthly_purchases
 rename NFI05a                       monthly_spend
 rename CCD01                        card_devolve
@@ -295,15 +295,15 @@ keep ///
 	reason_not_cpf_number ///
 	reason_not_cpf_interest ///
 	reason_not_cpf_benefits ///
-	reason_not_cpf_inofrmation ///
+	reason_not_cpf_information ///
 	reason_not_cpf_other ///
 	freq_cpf_na ///
-	reason_not_cpf_time_da ///
-	reason_not_cpf_number_da ///
-	reason_not_cpf_interest_dat ///
-	reason_not_cpf_benefits_da ///
-	reason_not_cpf_inofrmation_da ///
-	reason_not_cpf_other_da ///
+	reason_da_not_cpf_time ///
+	reason_da_not_cpf_number ///
+	reason_da_not_cpf_interest ///
+	reason_da_not_cpf_benefits ///
+	reason_da_not_cpf_information ///
+	reason_da_not_cpf_other ///
 	monthly_purchases ///
 	monthly_spend ///
 	card_devolve ///

@@ -1,33 +1,4 @@
-* Analyzing Data - This program produces the figures 
-
-*********************** MORE COMPLEX FIGURES THAT I HAVE NOT REPLICATED YET **************
-* OK "Percent of Yes Responses by Variable" p.12
-* "Other participants in the program that you know?-Other" p.13
-* "Requirements Devolve program" p.17
-* OK "Daily Payment Methods Used for Purchases" p.24
-* "Financial Institutions " p.27
-* "Financial Institutions-Other" p.28
-* "Reason(s) do you not include your CPF number" p. 37
-* "Reason(s) do you not include your CPF-Other"  p. 38 NFI04a1_Other
-* "Reason(s) do you not include your CPF-Other"  p. 40 NFI04b1_Other
-* "Reason(s) do you not include your CPF number" p. 41
-* "Issues with Using the Devolve-ICMS Citizen Card" p. 51
-* "Problems using Citizen Card-Other" p. 52
-* "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 59 icms_rate2
-* "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 60 icms_label_with_counts
-* "Reasons not participating Nota Fiscal Program-Other" p. 71 other_NFG02Aa
-* "Days Unable to Enter Home Due to Floods" p. 78
-* "Type of Assistance Received for Flood Recovery" p. 80
-* "Kind of assistance after the floods-Other" p. 81
-* "Reasons for not collecting the card because of..." p. 90
-* "Reasons not collecting the card-Other" p. 91
-* "Types of problems in Devolve card among beneficiaries" p. 113
-
-
-******************************************************************************************
-
-******************************* SOME FIGURES RECEIVED DIFFERENT FILE NAMES ***************
-* "Graph_Top_Municipalities_Respondents_live" = F_DEM01
+* Analyzing Data - This program most of the figures presented in slides 
 
 * Loads Dataset
 use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
