@@ -29,7 +29,7 @@ use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 * List here the prefixes you want to run
 local vars_cat other_beneficiaries payment_method bank_account reason_not_cpf reason_da_not_cpf
 
-local vars_cat reason_not_cpf
+//local vars_cat payment_method
 
 foreach var_cat of local vars_cat {
 
@@ -61,7 +61,7 @@ foreach var_cat of local vars_cat {
         gen percentage = round(_freq / `n_obs' * 100, 0.01)
 
         * Plot
-        * Creating titles
+        * Creating titles and personalizing
         if "`var_cat'" == "other_beneficiaries" {
             local title = "Who are the other participants in the program that you know?"
         }
@@ -70,6 +70,21 @@ foreach var_cat of local vars_cat {
         }
         else if "`var_cat'" == "bank_account" {
             local title = "Financial Institution you have an account with?"
+        }
+        else if inlist("`var_cat'", "reason_not_cpf", "reason_da_not_cpf") {
+            if "`var_cat'" == "reason_not_cpf" {
+                local title = "Reasons for not including your CPF number when asked"
+            }
+            else if "`var_cat'" == "reason_da_not_cpf" {
+                local title = "Reasons for not including your CPF number when not asked"
+            }
+            replace category = "Don't know the number" if category == "Number"
+            replace category = "Not interested in invoices" if category == "Interest"
+            replace category = "Data Privacy" if category == "Information"
+            replace category = "Don't know the benefits" if category == "Benefits"
+        }
+        else {
+            local title = "`var_cat'"
         }
         graph bar percentage, over(category, sort(1) descending) ///
             horizontal nofill missing ///

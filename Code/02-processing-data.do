@@ -37,7 +37,7 @@ rename PAG01_3                      payment_method_credit
 rename PAG01_4                      payment_method_pix
 rename PAG01_5                      payment_method_mobile
 rename PAG01_666                    payment_method_other
-rename PAG04                        payment_method_daily
+rename PAG04                        payment_daily_method
 rename PAG02                        purchases_last_week
 rename PAG03                        hh_bank_account
 rename PAG03a_1                     bank_account_brasil
@@ -266,7 +266,7 @@ keep ///
 	payment_method_pix ///
 	payment_method_mobile ///
 	payment_method_other ///
-	payment_method_daily ///
+	payment_daily_method ///
 	purchases_last_week ///
 	hh_bank_account ///
 	bank_account_brasil ///
