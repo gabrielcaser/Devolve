@@ -78,6 +78,7 @@ local vars know_devolve
            icms_rate2_div
            icms_rate_rgs
            municipality_top5_flood_aid
+           displaced_rains_days_cat
            ;
 #d cr 
 

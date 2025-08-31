@@ -232,7 +232,7 @@ label var icms_rate2_div "(IET05) Perceived ICMS Tax Rate on Purchases in RS"
 label define lblicms_rate2_div 1 "Less than 05%" 2 "Between 05-10%" 3 "Between 10-20%" 4 "Between 20-30%" 5 "Between 30-40%" 6 "More than 40%" .d "Don't know"
 label values icms_rate2_div lblicms_rate2_div
 
-label var icms_rate_rgs "Perceived ICMS Tax Rate on Purchases in RS, IET05 = .d"
+label var icms_rate_rgs "(IET05a) Perceived ICMS Tax Rate on Purchases in RS, IET05 = .d"
 
 * Variable Municipality (change all the values to "Other" beside the top 5 more frequent)
 * Find top 5 most frequent municipalities
