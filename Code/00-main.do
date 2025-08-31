@@ -18,7 +18,7 @@ display "`c(username)'"
 if "`c(username)'" == "gabri" {
     global dropbox       "C:\Users\gabri\Dropbox\Survey_DevolveICMS"
 	global github 	     "C:\Users\gabri\Documents\Github\World Bank\Devolve"
-	global overleaf_figs "C:\Users\gabri\Dropbox\Apps\Overleaf\Devolve_SEFAZ_RS\RGS-survey data\Figures\Figures_Gabriel"
+	//global overleaf_figs "C:\Users\gabri\Dropbox\Apps\Overleaf\Devolve_SEFAZ_RS\RGS-survey data\Figures\Figures_Gabriel"
 }
 
 * Set globals for sub-folders 

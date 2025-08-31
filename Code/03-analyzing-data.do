@@ -217,7 +217,7 @@ foreach var of local vars {
             ysize(6) xsize(10)
 
         graph export "${github}/Outputs/Figures/`file_name'_`group_label'.png", replace width(2150)
-        graph export "${overleaf_figs}/`file_name'_`group_label'.png", replace width(2150)
+        //graph export "${overleaf_figs}/`file_name'_`group_label'.png", replace width(2150)
     }
 
     ** Standard plots
@@ -253,7 +253,7 @@ foreach var of local vars {
             ylabel(, noticks nogrid nolabels) ///
             ysize(6) xsize(10)
         graph export "${github}/Outputs/Figures/`file_name'_partsample.png", replace width(2150)
-        graph export "${overleaf_figs}/`file_name'_partsample.png", replace width(2150)
+        //graph export "${overleaf_figs}/`file_name'_partsample.png", replace width(2150)
     }
 	
     * Plot for full sample
@@ -266,7 +266,7 @@ foreach var of local vars {
         ylabel(, noticks nogrid nolabels) ///
         ysize(6) xsize(10)
     graph export "${github}/Outputs/Figures/`file_name'.png", replace width(2150)
-    graph export "${overleaf_figs}/`file_name'.png", replace width(2150)
+    //graph export "${overleaf_figs}/`file_name'.png", replace width(2150)
 
     restore
 }

@@ -93,7 +93,7 @@ foreach var_cat of local vars_cat {
             ysize(6) xsize(10)
         
         graph export "${github}/Outputs/Figures/F_`var_cat'_categories.png", replace width(2150)
-        graph export "${overleaf_figs}/F_`var_cat'_categories.png", replace width(2150)
+       //graph export "${overleaf_figs}/F_`var_cat'_categories.png", replace width(2150)
     restore
 }
 
@@ -105,4 +105,4 @@ twoway (kdensity monthly_purchases if hh_bank_account == 1, color(blue) lpattern
        xtitle("Monthly Purchases") ytitle("Density") ///
        note("Smoothed density curves for monthly purchases distribution by bank account ownership")
        graph export "${github}/Outputs/Figures/F_monthly_purchases_density.png", replace width(2150)
-       graph export "${overleaf_figs}/F_monthly_purchases_density.png", replace width(2150)
+       //graph export "${overleaf_figs}/F_monthly_purchases_density.png", replace width(2150)
