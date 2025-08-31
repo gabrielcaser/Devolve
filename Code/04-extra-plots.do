@@ -1,37 +1,10 @@
-* This do-file creates a few extra plots for the slides
-
-*********************** MORE COMPLEX FIGURES THAT I HAVE NOT REPLICATED YET **************
-* "Requirements Devolve program" p.17
-* "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 59 icms_rate2
-* "Perceived ICMS Tax Rate on Purchases in Rio Grande do Sul" p. 60 icms_label_with_counts
-* "Days Unable to Enter Home Due to Floods" p. 78
-* "Types of problems in Devolve card among beneficiaries" p. 113
-* OK "Percent of Yes Responses by Variable" p.12
-* OK "Other participants in the program that you know?-Other" p.13
-* OK "Daily Payment Methods Used for Purchases" p.24
-* OK "Financial Institutions " p.27
-* OK "Financial Institutions-Other" p.28
-* OK "Reason(s) do you not include your CPF number" p. 37
-* OK "Reason(s) do you not include your CPF-Other"  p. 38 NFI04a1_Other
-* OK "Reason(s) do you not include your CPF-Other"  p. 40 NFI04b1_Other
-* OK "Reason(s) do you not include your CPF number" p. 41
-* OK "Issues with Using the Devolve-ICMS Citizen Card" p. 51
-* OK "Problems using Citizen Card-Other" p. 52
-* OK "Reasons not participating Nota Fiscal Program-Other" p. 71 other_NFG02Aa
-* OK "Type of Assistance Received for Flood Recovery" p. 80
-* OK "Kind of assistance after the floods-Other" p. 81
-* OK "Reasons for not collecting the card because of..." p. 90
-* OK "Reasons not collecting the card-Other" p. 91
-
+* Description - This do-file creates a few extra plots for the slides
 
 * Load dataset
 use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 
 * List here the prefixes you want to run
 local vars_cat other_beneficiaries payment_method bank_account reason_not_cpf reason_da_not_cpf problem_card aid card_collection
-
-
-local vars_cat card_collection
 
 foreach var_cat of local vars_cat {
 
@@ -123,3 +96,13 @@ foreach var_cat of local vars_cat {
         graph export "${overleaf_figs}/F_`var_cat'_categories.png", replace width(2150)
     restore
 }
+
+* Density plot
+twoway (kdensity monthly_purchases if hh_bank_account == 1, color(blue) lpattern(solid)) ///
+       (kdensity monthly_purchases if hh_bank_account == 4, color(red) lpattern(dash)), ///
+       legend(order(1 "Has Bank Account" 2 "No Bank Account")) ///
+       title("Monthly Purchases Distribution by Bank Account Ownership") ///
+       xtitle("Monthly Purchases") ytitle("Density") ///
+       note("Smoothed density curves for monthly purchases distribution by bank account ownership")
+       graph export "${github}/Outputs/Figures/F_monthly_purchases_density.png", replace width(2150)
+       graph export "${overleaf_figs}/F_monthly_purchases_density.png", replace width(2150)

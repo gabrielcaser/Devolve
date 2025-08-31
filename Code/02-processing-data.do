@@ -200,17 +200,39 @@ label values age_div lblage_div
 label var age_div "(DEM02) Age Category"
 
 *ICMS rates
-gen icms_rate2_div=.
-replace icms_rate2_div=1 if icms_rate2 < 7
-replace icms_rate2_div=2 if icms_rate2 >= 7 & icms_rate2 < 10
-replace icms_rate2_div=3 if icms_rate2 >= 10 & icms_rate2 < 20
-replace icms_rate2_div=4 if icms_rate2 >= 20 & icms_rate2 < 30
-replace icms_rate2_div=5 if icms_rate2 >= 30 & icms_rate2 < 40
-replace icms_rate2_div=6 if icms_rate2 >= 40
+gen     icms_rate2_div = .
 
-label define lblicms_rate2_div 1 "Less than 7%" 2 "From 7% to 10%" 3 "From 10% to 20%" 4 "From 20% to 30%" 5 "From 30% to 40%" 6 "More than 40%"
+replace icms_rate2_div = 1  if icms_rate2 < 5
+replace icms_rate2_div = 2  if icms_rate2 >= 5  & icms_rate2 < 10
+replace icms_rate2_div = 3  if icms_rate2 >= 10 & icms_rate2 < 20
+replace icms_rate2_div = 4  if icms_rate2 >= 20 & icms_rate2 < 30
+replace icms_rate2_div = 5  if icms_rate2 >= 30 & icms_rate2 < 40
+replace icms_rate2_div = 6  if icms_rate2 >= 40
+replace icms_rate2_div = .d if icms_rate2 == .d
+replace icms_rate2_div = .  if icms_rate2 == .
+
+* Displaced rainy days categories
+
+gen     displaced_rains_days_cat = .
+replace displaced_rains_days_cat = 1  if displaced_rains_days <= 7 & displaced_rains_days != .
+replace displaced_rains_days_cat = 2  if displaced_rains_days > 7 & displaced_rains_days <= 14
+replace displaced_rains_days_cat = 3  if displaced_rains_days > 14 & displaced_rains_days <= 30
+replace displaced_rains_days_cat = 4  if displaced_rains_days > 30 & displaced_rains_days <= 60
+replace displaced_rains_days_cat = 5  if displaced_rains_days > 60 & displaced_rains_days != .
+replace displaced_rains_days_cat = .d if displaced_rains_days == .d
+
+label define lbldisplaced_rains_days_cat 1 "1 week or less" 2 "1 - 2 weeks" 3 "2 - 4 weeks" 4 "4 - 8 weeks" 5 "More than 8 weeks" .d "Don't know"
+label values displaced_rains_days_cat lbldisplaced_rains_days_cat
+label var displaced_rains_days_cat "(INU03a) Days displaced due to rain (categories)"
+
+
+
+label var icms_rate2_div "(IET05) Perceived ICMS Tax Rate on Purchases in RS"
+
+label define lblicms_rate2_div 1 "Less than 05%" 2 "Between 05-10%" 3 "Between 10-20%" 4 "Between 20-30%" 5 "Between 30-40%" 6 "More than 40%" .d "Don't know"
 label values icms_rate2_div lblicms_rate2_div
-label var icms_rate2_div "ICMS Rate Category"
+
+label var icms_rate_rgs "Perceived ICMS Tax Rate on Purchases in RS, IET05 = .d"
 
 * Variable Municipality (change all the values to "Other" beside the top 5 more frequent)
 * Find top 5 most frequent municipalities
@@ -223,6 +245,19 @@ restore
 gen municipality_top5 = municipality
 replace municipality_top5 = "Other" if !inlist(municipality, `top5')
 label var municipality_top5 "(DEM01) Top 5 municipalities where respondents live"
+
+* Creating Top 5 municipalities that received flood_aid
+preserve
+	contract municipality flood_aid
+	keep if flood_aid == 1
+	gsort -_freq
+	keep in 1/5
+	levelsof municipality, local(top5) sep(",")
+restore
+gen municipality_top5_flood_aid = municipality
+replace municipality_top5_flood_aid = "Other" if !inlist(municipality, `top5')
+replace municipality_top5_flood_aid = "." if flood_aid != 1
+label var municipality_top5_flood_aid "(DEM01_flood) Top 5 municipalities that received flood aid"
 
 * Encoded vars that are openly filed when person answered "Other" 
 foreach var in PAG03a_Other INU04a_Other CCD09_Other DEV02a_Other CCD07_Other NFG02Aa_Other NFI04a1_Other NFI04b1_Other {
@@ -458,7 +493,9 @@ keep ///
 	CCD07_Other_encoded ///
 	NFG02Aa_Other_encoded ///
 	NFI04a1_Other_encoded ///
-	NFI04b1_Other_encoded
+	NFI04b1_Other_encoded ///
+	displaced_rains_days_cat ///
+	municipality_top5_flood_aid
 
 
 *-------------------------------------------------------------------------------	

@@ -16,6 +16,11 @@ import excel "${dropbox}\data\raw\Base Final BM Programa Devolve ICMS RS Coleta.
 * Save raw .dta file
 save "${dropbox}\data\raw\devolve_survey_raw.dta", replace // 1039 obs and 236 vars
 
+* Correcting INU03a values
+replace INU03a = "30" if INU03a == "Mais de 30 dias" 
+replace INU03a = "30" if INU03a == "Quase 30 dias"
+replace INU03a = ".d" if inlist(INU03a, "-999", "-9")
+
 * Change variable types
 destring, replace
 

@@ -74,6 +74,9 @@ local vars know_devolve
            NFG02Aa_Other_encoded
            NFI04a1_Other_encoded
            NFI04b1_Other_encoded
+           program_eligilibility
+           icms_rate2_div
+           icms_rate_rgs
            ;
 #d cr 
 
@@ -92,17 +95,6 @@ global restricted_sample_vars reason_money_accounts problem_card tax_collection 
 						   tax_essential_goods icms_rate_rgs increase_tax_on_food ///
 						   tax_on_foodreturned tax_food_all tax_perfumes_makeup ///
                            usage_increases purchases_last_week
-					
-					
-					
-					
-
-local vars NFI04a1_Other_encoded NFI04b1_Other_encoded // LINE TO TEST VARIABLES! EXCLUDE AFTER TESTING
-
-
-
-
-
 
 
 * Duplicating vars that will produce more than one grouped plot, mantendo os labels originais
@@ -146,7 +138,7 @@ foreach var of local vars {
 	local file_name = "F_" + "`file_name'" 
     
     * Getting number of observations
-	if inlist("`var'", "municipality_top5") { // string vars
+	if inlist("`var'", "municipality_top5", "municipality_top5_flood_aid") { // string vars
 	 drop if `var' == "."
 	 count if !missing(`var') | `var' == ".d"
 	}
@@ -165,7 +157,8 @@ foreach var of local vars {
 					   tax_essential_goods cpf_on_invoice_rule increase_tax_on_food
 					   tax_on_foodreturned tax_food_all tax_perfumes_makeup
 					   household_size stores_nearby card_use_worry
-					   worry_unauthorized_card
+					   worry_unauthorized_card icms_rate2_div icms_rate_rgs
+                       displaced_rains_days_cat
 					   ;
 	#d cr
 	
