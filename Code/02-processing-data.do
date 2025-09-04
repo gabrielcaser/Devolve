@@ -74,15 +74,15 @@ rename NFI04                        cpf_invoice
 rename NFI04a                       cpf_invoice_freq
 rename NFI04a1_1                    reason_not_cpf_time
 rename NFI04a1_2                    reason_not_cpf_number
-rename NFI04a1_4                    reason_not_cpf_interest
-rename NFI04a1_3                    reason_not_cpf_benefits
+rename NFI04a1_3                    reason_not_cpf_interest
+rename NFI04a1_4                    reason_not_cpf_benefits
 rename NFI04a1_5                    reason_not_cpf_information
 rename NFI04a1_555                  reason_not_cpf_other
 rename NFI04b                       freq_cpf_na
 rename NFI04b1_1                    reason_da_not_cpf_time
 rename NFI04b1_2                    reason_da_not_cpf_number
-rename NFI04b1_4                    reason_da_not_cpf_interest
-rename NFI04b1_3                    reason_da_not_cpf_benefits
+rename NFI04b1_3                    reason_da_not_cpf_interest
+rename NFI04b1_4                    reason_da_not_cpf_benefits
 rename NFI04b1_5                    reason_da_not_cpf_information
 rename NFI04b1_555                  reason_da_not_cpf_other
 rename NFI05                        monthly_purchases
@@ -327,6 +327,8 @@ foreach var in PAG03a_Other INU04a_Other CCD09_Other DEV02a_Other CCD07_Other NF
 	encode `var', gen(`var'_encoded)
 }
 
+* Adjusting titles
+label var participates_devolve "(DEVPAR01) Participation in the Devolve program"
 
 *-------------------------------------------------------------------------------	
 * Merge with urban/rural classification

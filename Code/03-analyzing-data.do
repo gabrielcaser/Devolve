@@ -119,13 +119,10 @@ label values hh_bank_account_3     lblhh_bank_account
 label values payment_method_cash_2 lblpayment_method_cash
 label values cpf_invoice_freq_2    lblcpf_invoice_freq
 
+
 * Loop
 foreach var of local vars {
     preserve
-    * Exceptions by variable
-    if "`var'" == "participates_devolve" {
-        drop if participates_devolve == 3
-    }
     
     * Get label for title
     local title : variable label `var'
