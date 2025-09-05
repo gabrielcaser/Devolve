@@ -4,14 +4,15 @@
 use "${dropbox}\data\intermediary\devolve_survey_clean.dta", replace // 1,039 obs and 236 variables
 
 * Renaming vars to influence the label
-rename INU04aoth INU04a_Other
-rename PAG03aoth PAG03a_Other
-rename CCD09oth  CCD09_Other
-rename DEV02aoth DEV02a_Other
-rename CCD07oth  CCD07_Other
-rename NFG02Aaoth NFG02Aa_Other
-rename NFI04a1oth NFI04a1_Other
-rename NFI04b1oth NFI04b1_Other
+rename INU04aoth   INU04a_Other
+rename PAG03aoth   PAG03a_Other
+rename CCD09oth    CCD09_Other
+rename DEV02aoth   DEV02a_Other
+rename CCD07oth    CCD07_Other
+rename NFG02Aaoth  NFG02Aa_Other
+rename NFI04a1oth  NFI04a1_Other
+rename NFI04b1oth  NFI04b1_Other
+rename DEVPAR02oth DEVPAR02_Other
 
 * Adding name of the variable at the begining of the label inside ()
 foreach var of varlist _all {
@@ -270,7 +271,7 @@ replace municipality_top5_flood_aid = "." if flood_aid != 1
 label var municipality_top5_flood_aid "(DEM01_flood) Top 5 municipalities that received flood aid"
 
 * Encoded vars that are openly filed when person answered "Other" 
-foreach var in PAG03a_Other INU04a_Other CCD09_Other DEV02a_Other CCD07_Other NFG02Aa_Other NFI04a1_Other NFI04b1_Other {
+foreach var in PAG03a_Other INU04a_Other CCD09_Other DEV02a_Other CCD07_Other NFG02Aa_Other NFI04a1_Other NFI04b1_Other DEVPAR02_Other{
 	if `var' == PAG03a_Other {
 		replace `var' = "Government aid"     if `var' == "Auxlio do governo"
 		replace `var' = "Government aid"     if `var' == "Auxlio do Governo do Estado"
@@ -319,6 +320,11 @@ foreach var in PAG03a_Other INU04a_Other CCD09_Other DEV02a_Other CCD07_Other NF
 		replace NFI04b1_Other = "Forget to request" if NFI04b1_Other == "Esquece de solicitar"
 		replace NFI04b1_Other = "Attendant didn't requested it" if NFI04b1_Other == "Não inclui o CPF quando o atendente não solicita"
 		replace NFI04b1_Other = "Not included for small purchases" if NFI04b1_Other == "Compras de pequeno valor não inclui o CPF"
+	}
+	if `var' == DEVPAR02_Other {
+		replace DEVPAR02_Other = "Banrisul Bank" if inlist(DEVPAR02_Other, "Banco Banrisul enviou uma carta", "Banco Banrisul")
+		replace DEVPAR02_Other = "Correspondence" if inlist(DEVPAR02_Other, "Recebeu uma correspondência")
+		replace DEVPAR02_Other = "School" if inlist(DEVPAR02_Other, "Escola")
 	}
 
 	// Calculate percentage for each value to change small categories for "Other"
@@ -510,6 +516,7 @@ keep ///
 	municipality_top5_flood_aid ///
 	age_div_hetero ///
 	income_div_hetero ///
+	DEVPAR02_Other_encoded 
 
 
 *-------------------------------------------------------------------------------	

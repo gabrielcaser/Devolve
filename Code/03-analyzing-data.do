@@ -81,6 +81,7 @@ local vars know_devolve
            displaced_rains_days_cat
            age_div_hetero
            income_div_hetero
+           DEVPAR02_Other_encoded
            ;
 #d cr 
 
@@ -133,7 +134,7 @@ label values hh_bank_account_3     lblhh_bank_account
 label values payment_method_cash_2 lblpayment_method_cash
 label values cpf_invoice_freq_2    lblcpf_invoice_freq
 
-//local vars  income_div # uncomment for tests
+//local vars  DEVPAR02_Other_encoded // uncomment for tests
 
 * Loop
 foreach var of local vars {

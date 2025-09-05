@@ -78,6 +78,9 @@ replace DEVPAR02 = .d if DEVPAR02 == 666
 label define lblprogram_discovery 1 "CRAS" 2 "Traditional media" 3 "Internet or Social Media" 4 "Family member or friend" 555 "Other" .d "Don't know"
 label values DEVPAR02 lblprogram_discovery
 
+rename PAR02oth DEVPAR02oth
+label var DEVPAR02oth "Other way you find out you were part of the program - specify"
+
 * Knows someone who participates in the program
 label var DEV02 "Does anyone you know participate in the program?"
 label define lblknows_participant 1 "Yes" 0 "No" .d "Don't know"
