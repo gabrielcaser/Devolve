@@ -45,7 +45,7 @@ global save_overleaf "yes"  // switch between "yes" or "no"
 if (1) do "${code}\01-cleaning-data.do"
 if (1) do "${code}\02-processing-data.do"
 if (1) do "${code}\03-analyzing-data.do"
-if (1) do "${code}\04-extra-plots.do"
+if (0) do "${code}\04-extra-plots.do"
 
 
 

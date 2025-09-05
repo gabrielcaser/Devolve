@@ -181,14 +181,16 @@ gen double duration_sec = duration_ms / 1000
 label var duration_ms "Duration of phone call (minutes)"
 
 * Variable income_div is correctly defined
-gen income_div = .
-replace income_div = 0  if income == 1 
-replace income_div = 1  if income >= 2 
-replace income_div = .d if income == .d
+gen income_div_hetero = .
+replace income_div_hetero = 0  if income == 1 
+replace income_div_hetero = 1  if income >= 2 
+replace income_div_hetero = .d if income == .d
 
-label define lblincome_div 0 "Income < R$600" 1 "Income > R$600" .d "Don't know"
-label values income_div lblincome_div
-label var income_div "(DEM04) Income Category"
+label define lblincome_div_hetero 0 "Income < R$600" 1 "Income > R$600" .d "Don't know"
+label values income_div_hetero lblincome_div_hetero
+label var income_div_hetero "(DEM04_heterogeneity) Income Category (Heterogeneity Analysis)"
+
+rename income income_div
 
 * Variable age 
 gen age_div = .
@@ -198,6 +200,14 @@ replace age_div = 1 if age >= 45
 label define lblage_div 0 "Less than 45 years" 1 "More than 45 years" 
 label values age_div lblage_div
 label var age_div "(DEM02) Age Category"
+
+gen age_div_hetero = .
+replace age_div_hetero = 0 if age < 45
+replace age_div_hetero = 1 if age >= 45
+
+label define lblage_div_hetero 0 "Less than 45 years" 1 "More than 45 years" 
+label values age_div_hetero lblage_div_hetero
+label var age_div_hetero "(DEM02_heterogeneity) Age Category (Heterogeneity Analysis)"
 
 *ICMS rates
 gen     icms_rate2_div = .
@@ -352,7 +362,7 @@ label var urban "Urban"
 *-------------------------------------------------------------------------------	
 * Order Data set
 *-------------------------------------------------------------------------------	
-order day month year id_entrevista municipality age gender income
+order day month year id_entrevista municipality age gender income_div
 
 * Maintaining only relevant variables (used in the script)
 keep ///
@@ -497,14 +507,16 @@ keep ///
 	NFI04a1_Other_encoded ///
 	NFI04b1_Other_encoded ///
 	displaced_rains_days_cat ///
-	municipality_top5_flood_aid
+	municipality_top5_flood_aid ///
+	age_div_hetero ///
+	income_div_hetero ///
 
 
 *-------------------------------------------------------------------------------	
 * Save data set
 *-------------------------------------------------------------------------------	
    
-save "${dropbox}\data\final\devolve_survey_constructed.dta", replace // 1039 observations and 117 variables
+save "${dropbox}\data\final\devolve_survey_constructed.dta", replace // 1039 observations
    
    
    

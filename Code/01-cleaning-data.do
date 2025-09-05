@@ -602,7 +602,7 @@ label values DEM03 lblgender
 * Income
 label var DEM04 "Income including benefits per month"
 replace DEM04 = .d if DEM04 == 666
-label define lblincome 1 "Less than 600" 2 "600-1,000" 3 "1,000-1,500" 4 "1,500-2,000" 5 "2,000-3,000" 6 "More than 3,000" .d "Don't know"
+label define lblincome 1 "Less than R$600" 2 "R$600-R$1,000" 3 "R$1,000-R$1,500" 4 "R$1,500-R$2,000" 5 "R$2,000-R$3,000" 6 "More than R$3,000" .d "Don't know"
 label values DEM04 lblincome
 
 * Number of people in the household

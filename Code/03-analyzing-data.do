@@ -79,6 +79,8 @@ local vars know_devolve
            icms_rate_rgs
            municipality_top5_flood_aid
            displaced_rains_days_cat
+           age_div_hetero
+           income_div_hetero
            ;
 #d cr 
 
@@ -98,8 +100,20 @@ global restricted_sample_vars reason_money_accounts problem_card tax_collection 
 						   tax_on_foodreturned tax_food_all tax_perfumes_makeup ///
                            usage_increases purchases_last_week
 
+** Define variables for which sort option is not needed
+#d ;
+global nosort_vars freq_cpf freq_cpf_na consumption_receipt
+                   deposit_frequency monthly_purchases_cat use_citizen_card
+				   inequality_brazil tax_collection tax_revenue_preference
+				   tax_essential_goods cpf_on_invoice_rule increase_tax_on_food
+				   tax_on_foodreturned tax_food_all tax_perfumes_makeup
+				   household_size stores_nearby card_use_worry
+				   worry_unauthorized_card icms_rate2_div icms_rate_rgs
+                   displaced_rains_days_cat age_div income_div
+				   ;
+#d cr
 
-* Duplicating vars that will produce more than one grouped plot, mantendo os labels originais
+* Duplicating vars that will produce more than one grouped plot
 gen hh_bank_account_2     = hh_bank_account // for age grouped plot
 gen hh_bank_account_3     = hh_bank_account // for gender grouped plot
 gen payment_method_cash_2 = payment_method_cash // for participation grouped plot
@@ -119,6 +133,7 @@ label values hh_bank_account_3     lblhh_bank_account
 label values payment_method_cash_2 lblpayment_method_cash
 label values cpf_invoice_freq_2    lblcpf_invoice_freq
 
+//local vars  income_div # uncomment for tests
 
 * Loop
 foreach var of local vars {
@@ -148,19 +163,7 @@ foreach var of local vars {
 
     local N : display r(N)
     
-    * Define variables for which sort option is not needed
-	#d ;
-    global nosort_vars freq_cpf freq_cpf_na consumption_receipt
-                       deposit_frequency monthly_purchases_cat use_citizen_card
-					   inequality_brazil tax_collection tax_revenue_preference
-					   tax_essential_goods cpf_on_invoice_rule increase_tax_on_food
-					   tax_on_foodreturned tax_food_all tax_perfumes_makeup
-					   household_size stores_nearby card_use_worry
-					   worry_unauthorized_card icms_rate2_div icms_rate_rgs
-                       displaced_rains_days_cat
-					   ;
-	#d cr
-	
+
     * Define sort option based on variable
     if strpos("${nosort_vars}", "`var'") {
         local sortopt = ""
