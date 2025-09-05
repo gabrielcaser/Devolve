@@ -195,10 +195,12 @@ rename income income_div
 
 * Variable age 
 gen age_div = .
-replace age_div = 0 if age < 45
-replace age_div = 1 if age >= 45
+replace age_div = 1 if age <= 30 & age != .
+replace age_div = 2 if age > 30 & age <= 40
+replace age_div = 3 if age > 40 & age <= 50
+replace age_div = 4 if age > 50
 
-label define lblage_div 0 "Less than 45 years" 1 "More than 45 years" 
+label define lblage_div 1 "30 years or less" 2 "31 - 40 years" 3 "41 - 50 years" 4 "51 years or more"
 label values age_div lblage_div
 label var age_div "(DEM02) Age Category"
 

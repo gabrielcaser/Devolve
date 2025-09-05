@@ -178,12 +178,12 @@ foreach var of local vars {
 	** Grouped plot
     if strpos("${grouped_vars}", "`var'") {
         if strpos("${grouped_income_vars}", "`var'") {
-            local group_var income_div
+            local group_var income_div_hetero
             local group_label "income"
             local extra_note " Don't Know group was omitted."
         }
         else if strpos("${grouped_age_vars}", "`var'") {
-            local group_var age_div
+            local group_var age_div_hetero
             local group_label "age"
             local extra_note ""
         }
