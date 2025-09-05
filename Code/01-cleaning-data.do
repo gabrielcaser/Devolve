@@ -324,7 +324,7 @@ label var NFI04a1_555 "Reasons not to include CPF other"
 label define lblreason_not_cpf_other 1 "Yes" 0 "No"
 label values NFI04a1_555 lblreason_not_cpf_other
 
-label var NFI04a1oth "Other reason not to include CPF when not asked"
+label var NFI04a1oth "Other reason not to include CPF when asked"
 
 * Frequency of asking for CPF when not asked by attendant
 label var NFI04b "Frequency of CPF use when attendence does not ask"
@@ -357,7 +357,7 @@ label var NFI04b1_555 "Reasons not to include CPF other"
 label define lblreason_not_cpf_other_da 1 "Yes" 0 "No"
 label values NFI04b1_555 lblreason_not_cpf_other_da
 
-label var NFI04b1oth "Other reason not to include CPF when asked"
+label var NFI04b1oth "Other reason not to include CPF when not asked"
 
 * Monthly purchases
 label var NFI05 "Monthly Purchases"

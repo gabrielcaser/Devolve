@@ -134,7 +134,7 @@ label values hh_bank_account_3     lblhh_bank_account
 label values payment_method_cash_2 lblpayment_method_cash
 label values cpf_invoice_freq_2    lblcpf_invoice_freq
 
-//local vars  DEVPAR02_Other_encoded // uncomment for tests
+local vars  NFI04a1_Other_encoded NFI04b1_Other_encoded // uncomment for tests
 
 * Loop
 foreach var of local vars {
