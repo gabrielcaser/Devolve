@@ -37,13 +37,13 @@ foreach command of local user_commands {
    }
 }
 
-* Save on overleaf?
-global save_overleaf "yes"  // switch between "yes" or "no"
+* Save direct on overleaf folder and replace figures?
+global save_overleaf "no"  // switch between "yes" or "no"
 
 * Run do files 
 * Switch to 0/1 to not-run/run do-files
-if (1) do "${code}\01-cleaning-data.do"
-if (1) do "${code}\02-processing-data.do"
+if (0) do "${code}\01-cleaning-data.do"
+if (0) do "${code}\02-processing-data.do"
 if (0) do "${code}\03-analyzing-data.do"
 if (0) do "${code}\04-extra-plots.do"
 
