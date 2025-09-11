@@ -1,7 +1,7 @@
 * Analyzing Data - This program most of the figures presented in slides 
 
 * Loads Dataset
-use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
+use "${data_dir}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 
 * Figures
 * Loop over selected variables for barplots

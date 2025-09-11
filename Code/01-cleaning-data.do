@@ -10,11 +10,11 @@
 *-------------------------------------------------------------------------------
 
 * Import Excel file
-import excel "${dropbox}\data\raw\Base Final BM Programa Devolve ICMS RS Coleta.xlsx", ///
+import excel "${data_dir}\data\raw\Base Final BM Programa Devolve ICMS RS Coleta.xlsx", ///
 	sheet("Consulta1") firstrow clear
 
 * Save raw .dta file
-save "${dropbox}\data\raw\devolve_survey_raw.dta", replace // 1039 obs and 236 vars
+save "${data_dir}\data\raw\devolve_survey_raw.dta", replace // 1039 obs and 236 vars
 
 * Correcting INU03a values
 replace INU03a = "30" if INU03a == "Mais de 30 dias" 
@@ -681,11 +681,44 @@ foreach var of varlist `r(varlist)' {
 	}
 }
 
+* Creating weights variable
+preserve
+	gcollapse (count) n_strata = id_entrevista, by(estrato)
+	rename estrato strata
+	tempfile strata
+	save "`strata'"
+restore
+
+preserve
+	import delim "${data_dir}/data/raw/strata.csv", clear
+	
+	egen total = sum(strata_size)
+	gen share = strata_size/total
+	gen target_actual  = round(1039*share)
+	
+	keep strata target_actual 
+	
+	merge 1:1 strata using "`strata'"
+	
+	gen weight = target_actual/n_strata
+	
+	keep strata weight 
+	rename strata estrato
+	
+	tempfile weights
+	save "`weights'"
+restore
+
+merge m:1 estrato using "`weights'"
+rename estrato strata
+
+label var strata "Survey Strata"
+label var weight "Survey Weight"
+
 * Dropping internal vars
 drop starttime endtime
 
 * Save cleaned .dta file
-save "${dropbox}\data\intermediary\devolve_survey_clean.dta", replace // 1039 obs and 232 vars
-
+save "${data_dir}\data\intermediary\devolve_survey_clean.dta", replace // 1039 obs and 234 vars
 
 * End of the script

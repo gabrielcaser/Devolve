@@ -1,7 +1,7 @@
 * Description: This script processes the Devolve-ICMS survey data and labeling variables for analysis. 
 
 * Loading dataset
-use "${dropbox}\data\intermediary\devolve_survey_clean.dta", replace // 1,039 obs and 236 variables
+use "${data_dir}\data\intermediary\devolve_survey_clean.dta", replace // 1,039 obs and 236 variables
 
 * Renaming vars to influence the label
 rename INU04aoth   INU04a_Other
@@ -353,7 +353,7 @@ label var participates_devolve "(DEVPAR01) Participation in the Devolve program"
 *-------------------------------------------------------------------------------	
 
 preserve   
-	import excel using "${dropbox}\data\raw\muncipalities_brazil.xlsx", firstrow clear
+	import excel using "${data_dir}\data\raw\muncipalities_brazil.xlsx", firstrow clear
 	rename Municipality municipality 
 	tempfile urbclass
 	save `urbclass', replace
@@ -518,14 +518,16 @@ keep ///
 	municipality_top5_flood_aid ///
 	age_div_hetero ///
 	income_div_hetero ///
-	DEVPAR02_Other_encoded 
+	DEVPAR02_Other_encoded ///
+	strata ///
+	weight
 
 
 *-------------------------------------------------------------------------------	
 * Save data set
 *-------------------------------------------------------------------------------	
    
-save "${dropbox}\data\final\devolve_survey_constructed.dta", replace // 1039 observations
+save "${data_dir}\data\final\devolve_survey_constructed.dta", replace // 1039 observations
    
    
    

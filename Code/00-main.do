@@ -16,7 +16,7 @@ display "`c(username)'"
 * Add file paths
 
 if "`c(username)'" == "gabri" {
-    global dropbox       "C:\Users\gabri\Dropbox\Survey_DevolveICMS"
+    global data_dir      "C:\Users\gabri\Dropbox\Survey_DevolveICMS"
 	global github 	     "C:\Users\gabri\Documents\Github\World Bank\Devolve"
 	global overleaf_figs "C:\Users\gabri\Dropbox\Apps\Overleaf\Devolve_SEFAZ_RS\RGS-survey data\Figures\Figures_Gabriel"
 }
@@ -29,7 +29,7 @@ global outputs 	"${github}\Outputs"
 sysdir set PLUS "${github}\Code\ado" 
 
 * Install packages  
-local user_commands	ietoolkit iefieldkit winsor sumstats estout keeporder grc1leg2  asdoc shp2dta spmap asdoc labutil
+local user_commands	ietoolkit iefieldkit winsor sumstats estout keeporder grc1leg2 asdoc shp2dta spmap asdoc labutil gtools
 foreach command of local user_commands {
    capture which `command'
    if _rc == 111 {

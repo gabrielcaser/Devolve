@@ -1,7 +1,7 @@
 * Description - This do-file creates a few extra plots for the slides
 
 * Load dataset
-use "${dropbox}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
+use "${data_dir}\data\final\devolve_survey_constructed.dta", clear // 1039 obs
 
 * List here the prefixes you want to run
 local vars_cat other_beneficiaries payment_method bank_account reason_not_cpf reason_da_not_cpf problem_card aid card_collection
